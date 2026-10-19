@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>หลับตาครั้งนั้น คนึงฝันถึงขงจื้อ</title>
+<meta name="description" content="เกมนิยายภาพเดโม ฝันถึงขงจื้อ แล้วนำคำสอนจากคัมภีร์หลุนอวี่มาแก้ปัญหาในชีวิตประจำวัน">
+<meta property="og:title" content="หลับตาครั้งนั้น คนึงฝันถึงขงจื้อ">
+<meta property="og:description" content="เกมนิยายภาพเดโม ฝันถึงขงจื้อ แล้วนำคำสอนจากคัมภีร์หลุนอวี่มาแก้ปัญหาในชีวิตประจำวัน">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' fill='%23B23A2B'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='%23F7F0E4' font-family='serif'%3E%E5%A4%A2%3C/text%3E%3C/svg%3E">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=IBM+Plex+Sans+Thai:wght@400;600&family=LXGW+WenKai+TC:wght@400;700&family=Trirong:wght@400;600&display=swap">
+<style>
+/* Layout: one fixed 1280x720 game stage, scaled to fit, letterboxed on dark ink. Two worlds: paper-and-ink dream, clean modern real life. */
+:root {
+  --ink: #2A2420;
+  --ink-soft: #5A4C40;
+  --paper: #F2EADB;
+  --paper-deep: #E9DFCB;
+  --seal: #B23A2B;
+  --apricot: #E9C4B8;
+  --bronze: #8A6A3E;
+  --bamboo: #CDBA92;
+  --jade: #5C8A78;
+  --night: #1C2238;
+  --mist: #F5F6F8;
+  --navy: #23324A;
+  --navy-soft: #4A5A72;
+  --sky: #8FB3D9;
+  --line: #D5DCE6;
+  --letterbox: #15120F;
+  --on-dark: #EDE6D6;
+  --font-display: 'Charmonman', 'Trirong', serif;
+  --font-dream: 'Trirong', 'Loma', serif;
+  --font-real: 'IBM Plex Sans Thai', 'Loma', sans-serif;
+  --font-zh: 'LXGW WenKai TC', 'Noto Serif TC', 'Noto Serif CJK TC', serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body { background: var(--letterbox); color: var(--on-dark); font-family: var(--font-real); overflow: hidden; }
+#app {
+  height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px;
+}
+#frame { position: relative; overflow: hidden; flex: none; }
+#stage { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: var(--paper-deep); color: var(--ink); cursor: pointer; user-select: none; -webkit-user-select: none; }
+#rotateHint { margin: 0; font-size: 14px; color: var(--on-dark); opacity: .75; text-align: center; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.zh { font-family: var(--font-zh); color: var(--seal); }
+#nvl .zh { color: var(--apricot); }
+
+/* background + sprite */
+#bg, #bg svg { position: absolute; inset: 0; width: 1280px; height: 720px; }
+#place { position: absolute; right: 24px; top: 20px; z-index: 2; font-size: 15px; padding: 6px 14px; pointer-events: none; }
+.world-dream #place, .world-night #place { font-family: var(--font-dream); background: rgba(242, 234, 219, .9); color: var(--ink); border: 1px solid rgba(138, 106, 62, .45); }
+.world-real #place { font-family: var(--font-real); background: var(--mist); color: var(--navy); border: 1px solid var(--line); border-radius: 999px; }
+#sprite { position: absolute; z-index: 1; left: 560px; top: 34px; height: 700px; width: auto; max-width: none; pointer-events: none; transition: opacity .45s ease, transform .45s ease, filter .45s ease; }
+#sprite.off { opacity: 0; transform: translateY(14px); }
+.world-night #sprite { filter: brightness(.94) saturate(.9); }
+#sprite.fx-happy { animation: hop .5s ease; }
+#sprite.fx-sad { transform: translateY(10px); filter: brightness(.9) saturate(.8); }
+#sprite.fx-think { transform: rotate(-1.4deg); transform-origin: 50% 100%; }
+#sprite.fx-shy { animation: sway 1.2s ease; }
+@keyframes hop { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-14px); } }
+@keyframes sway { 0%,100% { transform: translateX(0); } 30% { transform: translateX(-8px); } 60% { transform: translateX(6px); } }
+#fade { position: absolute; inset: 0; z-index: 40; background: var(--letterbox); opacity: 0; pointer-events: none; transition: opacity .28s ease; }
+#fade.on { opacity: 1; }
+
+/* text box */
+#box { position: absolute; z-index: 4; left: 80px; right: 80px; bottom: 28px; height: 200px; box-sizing: border-box; padding: 44px 52px 30px; }
+#nameTag { position: absolute; left: 40px; top: -26px; font-size: 22px; font-weight: 600; padding: 6px 22px; }
+#nameTag:empty { display: none; }
+#line { margin: 0; white-space: pre-wrap; }
+#line .think { opacity: .78; }
+.world-dream #box, .world-night #box { background: rgba(242, 234, 219, .96); font-family: var(--font-dream); }
+.world-dream #box::before, .world-night #box::before { content: ""; position: absolute; left: 0; right: 0; top: -9px; height: 18px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1120 18' preserveAspectRatio='none'%3E%3Cpath d='M0 11 C60 6 120 13 200 9 C300 4 380 12 470 8 C560 4 640 13 740 9 C820 6 900 12 980 8 C1040 5 1090 10 1120 8' fill='none' stroke='%232A2420' stroke-opacity='.72' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.world-dream #line, .world-night #line { font-size: 26px; line-height: 1.75; color: var(--ink); }
+.world-dream #nameTag, .world-night #nameTag { font-family: var(--font-dream); background: var(--seal); color: #F7F0E4; border: 2px solid var(--paper); outline: 2px solid var(--seal); }
+.world-dream #nameTag.me, .world-night #nameTag.me { background: var(--ink); outline-color: var(--ink); }
+.world-real #box { background: rgba(255, 255, 255, .97); border: 1px solid var(--line); border-radius: 16px; font-family: var(--font-real); }
+.world-real #line { font-size: 24px; line-height: 1.7; color: var(--navy); }
+.world-real #nameTag { font-family: var(--font-real); background: var(--sky); color: var(--navy); border-radius: 999px; top: -20px; left: 32px; font-size: 19px; }
+.world-real #nameTag.me { background: var(--navy); color: #FFFFFF; }
+.caret { display: inline-block; width: 11px; height: 11px; margin-left: 10px; vertical-align: middle; background: var(--seal); animation: blink 1s steps(2) infinite; }
+.world-real .caret { background: var(--sky); border-radius: 50%; }
+@keyframes blink { 50% { opacity: .25; } }
+.quick { position: absolute; right: 18px; bottom: 6px; display: flex; gap: 2px; }
+.quick button { background: none; border: none; font-family: var(--font-real); font-size: 14px; padding: 6px 10px; min-height: 32px; }
+.world-dream .quick button, .world-night .quick button { color: #6B5232; }
+.world-real .quick button { color: var(--navy-soft); }
+
+/* choices */
+#choices { position: absolute; z-index: 6; left: 50%; top: 150px; transform: translateX(-50%); width: 640px; display: flex; flex-direction: column; gap: 16px; }
+#choices button { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 66px; box-sizing: border-box; padding: 12px 28px; text-align: left; font-size: 22px; line-height: 1.45; }
+.world-dream #choices button, .world-night #choices button { font-family: var(--font-dream); background: #F4ECDC; color: var(--ink); border: 1px solid var(--bronze); border-left: 10px solid var(--bamboo); border-right: 10px solid var(--bamboo); }
+.world-dream #choices button::before, .world-night #choices button::before { content: ""; flex: none; width: 13px; height: 13px; border: 2px solid var(--seal); }
+.world-dream #choices button:hover::before, .world-dream #choices button:focus-visible::before, .world-night #choices button:hover::before, .world-night #choices button:focus-visible::before { background: var(--seal); }
+.world-real #choices button { font-family: var(--font-real); background: #FFFFFF; color: var(--navy); border: 1px solid var(--line); border-radius: 14px; }
+.world-real #choices button:hover { border-color: var(--sky); }
+
+/* NVL */
+#nvl { position: absolute; inset: 0; z-index: 7; background: rgba(28, 34, 56, .94); color: var(--on-dark); font-family: var(--font-dream); }
+#nvl .slips { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 47px, rgba(237, 230, 214, .05) 47px 48px); }
+#nvlBody { position: absolute; left: 180px; top: 110px; width: 920px; display: flex; flex-direction: column; gap: 16px; font-size: 25px; line-height: 1.9; }
+#nvlBody p { margin: 0; }
+#nvlBody p.zhline { font-family: var(--font-zh); font-size: 30px; letter-spacing: 3px; color: var(--apricot); }
+.hint { position: absolute; right: 56px; bottom: 34px; display: flex; align-items: center; gap: 10px; font-family: var(--font-real); font-size: 14px; opacity: .75; }
+.hint::after { content: ""; width: 11px; height: 11px; background: var(--seal); }
+
+/* chapter card */
+#chapter { position: absolute; inset: 0; z-index: 8; background: rgba(21, 18, 15, .9); color: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+#chapter .eyebrow { font-family: var(--font-real); font-size: 18px; letter-spacing: .14em; color: var(--apricot); }
+#chapter h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 58px; line-height: 1.4; text-wrap: balance; text-align: center; }
+
+/* phone chat */
+#chat { position: absolute; z-index: 3; left: 420px; top: 40px; width: 440px; height: 600px; background: #EEF2F7; border: 10px solid #1B2232; border-radius: 34px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-real); color: var(--navy); box-shadow: 0 24px 60px rgba(0, 0, 0, .25); }
+#chatHead { padding: 16px 20px 12px; background: #FFFFFF; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 17px; }
+#chatBody { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; padding: 14px 16px 18px; overflow: hidden; }
+.msg { display: flex; flex-direction: column; gap: 3px; max-width: 82%; animation: pop .25s ease; }
+.msg .who { font-size: 12px; color: var(--navy-soft); padding-left: 4px; }
+.msg .bubble { background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; padding: 9px 14px; font-size: 17px; line-height: 1.5; }
+.msg.me { align-self: flex-end; }
+.msg.me .bubble { background: var(--sky); border-color: var(--sky); border-radius: 16px 16px 4px 16px; }
+.msg.sys .bubble { background: transparent; border: 1px dashed var(--navy-soft); color: var(--navy-soft); font-size: 15px; }
+@keyframes pop { from { transform: translateY(8px); opacity: 0; } }
+#chatHint { position: absolute; z-index: 3; left: 880px; top: 590px; font-family: var(--font-real); font-size: 14px; color: var(--navy); background: var(--mist); padding: 6px 12px; border-radius: 999px; }
+
+/* overlays */
+.overlay { position: absolute; inset: 0; z-index: 20; cursor: default; display: flex; align-items: center; justify-content: center; }
+.panel-real { background: rgba(245, 246, 248, .985); color: var(--navy); font-family: var(--font-real); }
+.panel-dream { background: rgba(233, 223, 203, .97); color: var(--ink); font-family: var(--font-dream); }
+.btn { min-height: 52px; padding: 0 28px; border-radius: 12px; border: none; font-family: var(--font-real); font-size: 18px; font-weight: 600; }
+.btn-primary { background: var(--navy); color: #FFFFFF; }
+.btn-primary:disabled { background: #A9B4C4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--navy); border: 1px solid var(--line); }
+.btn-seal { background: var(--seal); color: #F7F0E4; border: 2px solid var(--paper); outline: 2px solid var(--seal); border-radius: 0; font-family: var(--font-dream); }
+.btn-paper { background: transparent; color: var(--ink); border: 1px solid var(--bronze); border-radius: 0; font-family: var(--font-dream); }
+.close-x { position: absolute; right: 24px; top: 20px; }
+
+/* a teaching card (bamboo-slip paper) */
+.tcard { position: relative; display: flex; gap: 10px; box-sizing: border-box; text-align: left; background: var(--paper); color: var(--ink); border: 1px solid var(--bronze); border-top: 10px solid var(--bamboo); border-bottom: 10px solid var(--bamboo); padding: 16px 14px 14px 18px; }
+.tcard .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.tcard .ref { font-family: var(--font-real); font-size: 13px; color: #6B5232; }
+.tcard .th { font-family: var(--font-dream); font-size: 18px; line-height: 1.6; }
+.tcard .key { margin-top: auto; font-family: var(--font-real); font-size: 13px; color: var(--jade); font-weight: 600; }
+.tcard .vz { flex: none; writing-mode: vertical-rl; font-family: var(--font-zh); font-size: 22px; letter-spacing: 3px; color: var(--seal); line-height: 1.25; }
+button.tcard { cursor: pointer; }
+button.tcard[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--seal); }
+button.tcard[aria-pressed="true"]::after { content: "เลือก"; position: absolute; right: -10px; top: -24px; background: var(--seal); color: #F7F0E4; font-family: var(--font-dream); font-size: 14px; font-weight: 600; padding: 2px 10px; border: 2px solid var(--paper); outline: 2px solid var(--seal); }
+
+/* present */
+#present { flex-direction: column; justify-content: center; gap: 18px; padding: 30px 40px; box-sizing: border-box; }
+#present .top { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+#present h2 { margin: 0; font-size: 26px; }
+#present .chip { font-size: 14px; color: var(--navy-soft); background: #E6ECF3; padding: 6px 14px; border-radius: 999px; }
+#presentPrompt { width: 100%; box-sizing: border-box; display: flex; gap: 14px; align-items: flex-start; background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px; padding: 16px 22px; font-size: 19px; line-height: 1.6; }
+#presentPrompt .tag { flex: none; background: var(--sky); font-size: 14px; font-weight: 600; padding: 3px 12px; border-radius: 999px; margin-top: 3px; }
+#presentCards { width: 100%; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+#presentCards .tcard { width: 220px; height: 318px; }
+#presentCards .tcard .th { font-size: 15.5px; line-height: 1.5; }
+#presentCards .tcard .vz { font-size: 20px; }
+#book, #log { z-index: 25; }
+#nameDlg, #howto { z-index: 35; }
+#present .foot { width: 100%; display: flex; align-items: center; gap: 18px; }
+#present .foot p { margin: 0; font-size: 15px; color: var(--navy-soft); line-height: 1.6; }
+
+/* gain + explain */
+#gain { flex-direction: column; gap: 22px; }
+#gain .eyebrow { font-family: var(--font-real); font-size: 16px; letter-spacing: .12em; color: #6B5232; }
+#gain .tcard { width: 560px; min-height: 250px; padding: 22px 22px 18px 28px; }
+#gain .tcard .th { font-size: 22px; }
+#gain .tcard .vz { font-size: 30px; }
+#explain .sheet { width: 900px; box-sizing: border-box; background: #FFFFFF; border: 1px solid var(--line); border-radius: 20px; padding: 30px 36px; display: flex; flex-direction: column; gap: 14px; }
+#explain .verdict { align-self: flex-start; font-size: 15px; font-weight: 600; padding: 4px 14px; border-radius: 999px; }
+.v-good { background: rgba(92, 138, 120, .18); color: #2F5E4E; }
+.v-half { background: rgba(201, 143, 127, .25); color: #7A4A3C; }
+.v-bad { background: rgba(178, 58, 43, .14); color: #8F2A1F; }
+#explain h3 { margin: 0; font-size: 26px; }
+#explain .used { font-size: 16px; color: var(--navy-soft); }
+#explain .used .zh { font-size: 20px; }
+#explain ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; line-height: 1.65; }
+#explain .row { display: flex; justify-content: flex-end; }
+
+/* book + log + ending + title */
+#book { flex-direction: column; justify-content: flex-start; padding: 28px 40px; box-sizing: border-box; gap: 16px; }
+#book h2, #log h2 { margin: 0; font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--ink); align-self: flex-start; }
+#bookList { width: 100%; flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 12px 6px 6px; box-sizing: border-box; align-content: start; }
+#bookList .tcard { min-height: 210px; }
+#bookList .locked { display: flex; align-items: center; justify-content: center; min-height: 210px; border: 1px dashed var(--bronze); color: #6B5A44; font-family: var(--font-real); font-size: 15px; }
+.applied { font-family: var(--font-real); font-size: 13px; color: var(--navy); background: rgba(143, 179, 217, .3); padding: 3px 10px; border-radius: 999px; align-self: flex-start; }
+#log { flex-direction: column; justify-content: flex-start; padding: 28px 40px; box-sizing: border-box; gap: 12px; }
+#logList { width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 18px; line-height: 1.6; padding-right: 8px; }
+#logList p { margin: 0; }
+#logList b { color: var(--seal); margin-right: 8px; }
+#ending { flex-direction: column; gap: 14px; background: rgba(28, 34, 56, .97); color: var(--on-dark); font-family: var(--font-real); padding: 30px 60px; box-sizing: border-box; }
+#ending .eyebrow { font-size: 16px; letter-spacing: .14em; color: var(--apricot); }
+#ending h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 46px; line-height: 1.35; }
+#ending .zhtitle { font-family: var(--font-zh); font-size: 24px; letter-spacing: 4px; color: var(--apricot); }
+#ending .rel { font-family: var(--font-dream); font-size: 21px; text-align: center; max-width: 820px; }
+#endRows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 1000px; }
+#endRows div { border: 1px solid rgba(237, 230, 214, .25); padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+#endRows .zh { color: var(--apricot); font-size: 19px; }
+#endRows .muted, #ending .note { color: rgba(237, 230, 214, .7); font-size: 13px; }
+#ending .row { display: flex; gap: 14px; }
+#ending .btn-ghost { color: var(--on-dark); border-color: rgba(237, 230, 214, .4); }
+#title { z-index: 30; justify-content: flex-start; background: var(--paper-deep); }
+#title svg.titlebg { position: absolute; inset: 0; width: 1280px; height: 720px; }
+#title img { position: absolute; right: 30px; bottom: -6px; height: 690px; width: auto; max-width: none; }
+#title .zhv { position: absolute; left: 70px; top: 150px; writing-mode: vertical-rl; font-family: var(--font-zh); font-size: 28px; letter-spacing: 8px; color: var(--seal); }
+#title .block { position: absolute; left: 136px; top: 182px; display: flex; flex-direction: column; gap: 6px; }
+#title h1 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 66px; line-height: 1.3; color: var(--ink); }
+#title .sub { margin: 0; font-family: var(--font-dream); font-size: 20px; color: var(--ink-soft); }
+#title nav { position: absolute; left: 136px; top: 456px; display: flex; flex-direction: column; gap: 4px; }
+#title nav button { display: flex; align-items: center; gap: 16px; background: none; border: none; padding: 6px 0; min-height: 48px; font-family: var(--font-dream); font-size: 25px; color: var(--ink); text-align: left; }
+#title nav button::before { content: ""; width: 13px; height: 13px; border: 2px solid var(--seal); }
+#title nav button:hover::before, #title nav button:focus-visible::before { background: var(--seal); }
+#title nav button:disabled { opacity: .4; cursor: not-allowed; }
+#title .ver { position: absolute; left: 136px; bottom: 22px; font-size: 13px; color: var(--ink-soft); font-family: var(--font-real); }
+#nameDlg .sheet, #howto .sheet { width: 640px; box-sizing: border-box; background: var(--paper); border: 1px solid var(--bronze); border-top: 10px solid var(--bamboo); border-bottom: 10px solid var(--bamboo); padding: 30px 36px; display: flex; flex-direction: column; gap: 16px; color: var(--ink); }
+#nameDlg h2, #howto h2 { margin: 0; font-family: var(--font-display); font-size: 34px; font-weight: 700; }
+#nameDlg label { font-family: var(--font-real); font-size: 15px; color: var(--ink-soft); }
+#nameDlg input { font-family: var(--font-dream); font-size: 24px; padding: 10px 14px; border: 1px solid var(--bronze); background: #FBF7EE; color: var(--ink); }
+#howto ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; line-height: 1.6; }
+.row-end { display: flex; justify-content: flex-end; gap: 12px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="frame">
+    <div id="stage" class="world-dream" aria-label="หน้าจอเกม">
+      <div id="bg" aria-hidden="true"></div>
+      <div id="place" hidden></div>
+      <img id="sprite" class="off" src="confucius.webp" alt="ขงจื้อ" hidden>
+      <div id="chat" hidden><div id="chatHead"></div><div id="chatBody"></div></div>
+      <div id="chatHint" hidden>แตะเพื่ออ่านข้อความถัดไป</div>
+      <div id="box" hidden>
+        <div id="nameTag"></div>
+        <p id="line"></p>
+        <div class="quick" role="toolbar" aria-label="เมนูด่วน">
+          <button type="button" data-act="log">ประวัติ</button>
+          <button type="button" data-act="book">สมุดคำสอน</button>
+          <button type="button" data-act="home">หน้าแรก</button>
+        </div>
+      </div>
+      <div id="choices" role="group" aria-label="ตัวเลือก" hidden></div>
+      <div id="nvl" hidden><div class="slips"></div><div id="nvlBody"></div><div class="hint">แตะเพื่ออ่านต่อ</div></div>
+      <div id="chapter" hidden><div class="eyebrow" id="chEyebrow"></div><h2 id="chTitle"></h2></div>
+
+      <div id="gain" class="overlay panel-dream" hidden>
+        <div class="eyebrow">ได้รับคำสอนใหม่ · บันทึกลงสมุดแล้ว</div>
+        <div id="gainCard"></div>
+        <button type="button" class="btn btn-seal" id="gainOk">เก็บลงสมุด แล้วฟังต่อ</button>
+      </div>
+
+      <div id="present" class="overlay panel-real" hidden>
+        <div class="top"><h2>เปิดสมุดคำสอน</h2><span class="chip" id="presentChip"></span></div>
+        <div id="presentPrompt"><span class="tag">ปัญหา</span><span id="presentText"></span></div>
+        <div id="presentCards" role="group" aria-label="การ์ดคำสอน"></div>
+        <div class="foot">
+          <button type="button" class="btn btn-primary" id="presentGo" disabled>ใช้คำสอนนี้</button>
+          <p>เลือกคำสอนที่ตรงกับต้นเหตุของปัญหา ถ้ายังไม่ใช่ จะได้ฟังคำอธิบาย แล้วเลือกใหม่ได้</p>
+        </div>
+      </div>
+
+      <div id="explain" class="overlay panel-real" hidden>
+        <div class="sheet">
+          <span class="verdict" id="exVerdict"></span>
+          <h3 id="exTitle"></h3>
+          <div class="used" id="exUsed"></div>
+          <ul id="exBody"></ul>
+          <div class="row"><button type="button" class="btn btn-primary" id="exGo"></button></div>
+        </div>
+      </div>
+
+      <div id="book" class="overlay panel-dream" hidden>
+        <h2>สมุดคำสอน</h2>
+        <button type="button" class="btn btn-paper close-x" data-close="book">ปิด</button>
+        <div id="bookList"></div>
+      </div>
+
+      <div id="log" class="overlay panel-dream" hidden>
+        <h2>ประวัติบทสนทนา</h2>
+        <button type="button" class="btn btn-paper close-x" data-close="log">ปิด</button>
+        <div id="logList"></div>
+      </div>
+
+      <div id="ending" class="overlay" hidden>
+        <div class="eyebrow">จบเดโม</div>
+        <h2>หลับตาครั้งนั้น คนึงฝันถึงขงจื้อ</h2>
+        <div class="zhtitle">那一次闔眼，魂牽夢縈的是孔子</div>
+        <p class="rel" id="endRel"></p>
+        <div id="endRows"></div>
+        <p class="note" id="endScore"></p>
+        <div class="row">
+          <button type="button" class="btn btn-seal" id="endAgain">เล่นใหม่</button>
+          <button type="button" class="btn btn-ghost" id="endBook">เปิดสมุดคำสอน</button>
+        </div>
+        <p class="note">เลขข้อหลุนอวี่อาจต่างกันเล็กน้อยตามฉบับที่ใช้อ้าง</p>
+      </div>
+
+      <div id="nameDlg" class="overlay panel-dream" hidden>
+        <form class="sheet" id="nameForm">
+          <h2>ก่อนหลับตา</h2>
+          <label for="nameInput">ชื่อของคุณ (ตัวเอก)</label>
+          <input id="nameInput" maxlength="16" value="ภูมิ" autocomplete="off">
+          <div class="row-end">
+            <button type="button" class="btn btn-paper" id="nameBack">กลับ</button>
+            <button type="submit" class="btn btn-seal">เริ่มฝัน</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="howto" class="overlay panel-dream" hidden>
+        <div class="sheet">
+          <h2>วิธีเล่น</h2>
+          <ul>
+            <li>แตะจอ คลิก หรือกด Space เพื่ออ่านต่อ</li>
+            <li>ในฝัน ท่านอาจารย์จะสอนหลักคิดจากคัมภีร์หลุนอวี่ แต่ละข้อจะถูกเก็บลงสมุดคำสอน</li>
+            <li>ตื่นมาในโลกจริง คุณต้องเลือกคำสอนจากสมุดไปแก้ปัญหา ผลมีสามแบบ ได้ผลดี ได้ครึ่งเดียว และใช้ผิดที่</li>
+            <li>ถ้ายังไม่ใช่ จะมีคำอธิบายว่าทำไม แล้วเลือกใหม่ได้</li>
+            <li>เดโมนี้มี 3 ปัญหา ใช้เวลาราว 15 นาที</li>
+          </ul>
+          <div class="row-end"><button type="button" class="btn btn-seal" data-close="howto">เข้าใจแล้ว</button></div>
+        </div>
+      </div>
+
+      <div id="title" class="overlay">
+        <svg class="titlebg" viewBox="0 0 1280 720" aria-hidden="true">
+          <rect width="1280" height="720" fill="#EFE6D4"/>
+          <circle cx="1000" cy="200" r="120" fill="#B23A2B" opacity=".1"/>
+          <path d="M0 470 C120 420 180 380 260 400 C340 420 380 350 470 340 C560 330 620 410 700 400 C800 385 860 330 960 345 C1060 360 1120 420 1280 400 L1280 720 L0 720 Z" fill="#2A2420" opacity=".07"/>
+          <path d="M0 570 C140 530 220 510 320 530 C430 550 520 490 640 500 C760 510 820 570 940 560 C1060 550 1160 510 1280 530 L1280 720 L0 720 Z" fill="#2A2420" opacity=".12"/>
+          <path d="M-20 70 C100 100 190 60 290 110 C350 140 420 135 480 112" fill="none" stroke="#2A2420" stroke-width="7" stroke-linecap="round" opacity=".75"/>
+          <path d="M200 86 C220 60 240 45 270 40" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+          <g fill="#E9C4B8"><circle cx="60" cy="82" r="13"/><circle cx="118" cy="96" r="11"/><circle cx="160" cy="84" r="14"/><circle cx="230" cy="94" r="12"/><circle cx="270" cy="40" r="10"/><circle cx="300" cy="116" r="13"/><circle cx="395" cy="134" r="12"/><circle cx="470" cy="112" r="11"/><ellipse cx="560" cy="250" rx="6" ry="4"/><ellipse cx="610" cy="330" rx="5" ry="3.5"/></g>
+        </svg>
+        <div class="zhv">那一次闔眼，魂牽夢縈的是孔子</div>
+        <div class="block">
+          <h1>หลับตาครั้งนั้น<br>คนึงฝันถึงขงจื้อ</h1>
+          <p class="sub">เดโม · สามปัญหาในชีวิตประจำวัน กับคำสอนจากแดนไกล</p>
+        </div>
+        <nav aria-label="เมนูหลัก">
+          <button type="button" id="tNew">เริ่มฝัน</button>
+          <button type="button" id="tCont" disabled>ฝันต่อจากครั้งก่อน</button>
+          <button type="button" id="tHow">วิธีเล่น</button>
+        </nav>
+        <img src="confucius.webp" alt="ภาพตัวละครขงจื้อ">
+        <div class="ver">เดโม 0.1</div>
+      </div>
+
+      <div id="fade"></div>
+    </div>
+  </div>
+  <p id="rotateHint" hidden>หมุนเครื่องเป็นแนวนอน เพื่ออ่านตัวหนังสือได้สบายขึ้น</p>
+</div>
+<div id="sr" class="sr-only" aria-live="polite"></div>
+
+<script>
+/*SCRIPT-START*/
+const CARDS = {
+  A: { ref: '1.1', zh: '學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？', th: 'เรียนแล้วหมั่นฝึกใช้ มิใช่เรื่องน่ายินดีหรือ มีสหายมาแต่แดนไกล มิใช่เรื่องน่าสุขใจหรือ', key: 'การเรียนจะสมบูรณ์ เมื่อได้นำไปใช้', heard: 'บทนำ · ใต้ต้นซิ่ง' },
+  D: { ref: '2.17', zh: '知之為知之，不知為不知，是知也。', th: 'รู้ก็ว่ารู้ ไม่รู้ก็ว่าไม่รู้ นี่แหละคือความรู้', key: 'ซื่อตรงต่อสิ่งที่ตนรู้และไม่รู้', heard: 'บทนำ · เรื่องของจื่อลู่' },
+  B: { ref: '15.24', zh: '其恕乎！己所不欲，勿施於人。', th: 'คงเป็นคำว่า “ซู่” สิ่งใดที่ตนไม่ปรารถนา อย่าทำแก่ผู้อื่น', key: 'ลองยืนในที่ของผู้อื่น', heard: 'ปัญหาที่ 1 · ยามเย็นในสำนัก' },
+  E: { ref: '15.28', zh: '眾惡之，必察焉；眾好之，必察焉。', th: 'เมื่อคนทั้งหลายเกลียดใคร ต้องพิจารณาให้ถ้วน เมื่อคนทั้งหลายรักใคร ก็ต้องพิจารณาให้ถ้วน', key: 'เสียงของคนหมู่มากไม่ใช่หลักฐาน', heard: 'ปัญหาที่ 2 · กลางทางสู่แคว้นเว่ย' },
+  F: { ref: '4.18', zh: '事父母幾諫，見志不從，又敬不違，勞而不怨。', th: 'ปรนนิบัติพ่อแม่ ทักท้วงอย่างนุ่มนวล เห็นว่าท่านยังไม่รับ ก็ยังคงเคารพ ไม่ขัดแข็ง เหนื่อยก็ไม่ขุ่นเคือง', key: 'เห็นต่างได้ แต่รักษาความเคารพ', heard: 'ปัญหาที่ 3 · ริมแม่น้ำยามค่ำ' }
+};
+const CARD_ORDER = ['A', 'D', 'B', 'E', 'F'];
+const CASES = { c1: 'งานกลุ่ม', c2: 'ข่าวลือในแชต', c3: 'คุยกับแม่เรื่องเส้นทาง' };
+
+const SCRIPT = {
+  start: [
+    { title: 'บทนำ', sub: 'ไม้ผุ' },
+    { bg: 'classroom' },
+    { nvl: [
+      'คาบปรัชญาจีน บ่ายวันพฤหัส แอร์ในห้องเย็น จนเหมือนมีใครกล่อม',
+      'อาจารย์อ่านประโยคแรกของคัมภีร์หลุนอวี่ ด้วยน้ำเสียงเรียบ ๆ เหมือนทุกสัปดาห์',
+      '「學而時習之，不亦說乎」',
+      '“เรียนแล้วหมั่นฝึกใช้ มิใช่เรื่องน่ายินดีหรือ” อาจารย์แปล แล้วบอกว่า ประโยคนี้ฟังง่าย แต่ทำยากที่สุด',
+      'ผมจำได้ถึงตรงนั้น แล้วเสียงในห้อง ก็ค่อย ๆ จางไป',
+      'เหลือแต่กลิ่นหมึก เสียงลมผ่านใบไม้ และเสียงใครคนหนึ่ง กระแอมอยู่เหนือหัวผม'
+    ] },
+    { bg: 'courtyard' },
+    { show: true },
+    { say: 'k', text: 'กลางวันแสก ๆ ยังนอนได้ ไม้ผุ แกะสลักไม่ได้ กำแพงดินเลน ฉาบไม่ติด' },
+    { say: 'k', text: 'ตื่นเถิด ไจ่หว่อ… เดี๋ยวนะ' },
+    { say: 'me', text: 'ขอโทษครับอาจารย์ ผมไม่ได้ตั้งใจหลับ…' },
+    { say: 'n', text: 'ผมเงยหน้าขึ้น แล้วคำขอโทษก็ค้างอยู่ในคอ' },
+    { say: 'n', text: 'คนตรงหน้าไม่ใช่อาจารย์ในคาบ หญิงสาวผมยาวในชุดคลุมแขนกว้าง ยืนมองผมอยู่ใต้ต้นไม้ ที่ดอกสีชมพูอ่อนบานเต็มกิ่ง' },
+    { say: 'k', fx: 'think', text: 'เจ้าไม่ใช่ไจ่หว่อ ศิษย์ขี้เซาของข้านี่นา เสื้อผ้าก็แปลก สำเนียงก็แปลก เจ้ามาจากแคว้นใด' },
+    { choice: [
+      { text: 'ผมมาจากประเทศไทยครับ อีกสองพันกว่าปีข้างหน้า', add: { score: 1 }, go: 'p_honest' },
+      { text: 'ที่นี่ที่ไหนครับ แล้วคุณเป็นใคร', go: 'p_ask' }
+    ] }
+  ],
+  p_honest: [
+    { say: 'k', fx: 'happy', text: 'สองพันปีข้างหน้า? ฮ่า ๆ เจ้าพูดเหมือนคนยังไม่ตื่นจริง ๆ' },
+    { say: 'k', text: 'แต่ข้าชอบคนที่บอกตรง ๆ ว่าตนมาจากไหน แม้เรื่องนั้นจะฟังประหลาดก็ตาม' },
+    { jump: 'p_meet' }
+  ],
+  p_ask: [
+    { say: 'k', text: 'ที่นี่คือสำนักของข้าในแคว้นหลู่ เจ้ามาหลับใต้ต้นซิ่งของข้า แล้วยังจะถามว่าข้าเป็นใคร' },
+    { say: 'k', fx: 'happy', text: 'ช่างเถิด ใครมาจากไหน ก็นั่งฟังได้ทั้งนั้น' },
+    { jump: 'p_meet' }
+  ],
+  p_meet: [
+    { say: 'k', text: 'ข้าแซ่ข่ง ชื่อชิว ศิษย์ทั้งหลายเรียกข้าว่า ฟูจื่อ' },
+    { say: 'think', text: 'ข่งชิว… ฟูจื่อ… ขงจื้อ? ขงจื้อเป็นผู้หญิง? ฝันนี้ชัดเกินไปแล้ว' },
+    { say: 'k', fx: 'think', text: 'ดูจากหน้าเจ้า เหมือนรู้จักชื่อข้า' },
+    { choice: [
+      { text: 'รู้จักครับ คุณคือปราชญ์ที่คนทั้งโลกยกย่อง ผมรู้เรื่องของคุณดี', go: 'p_know' },
+      { text: 'เคยได้ยินในคาบครับ แต่บอกตรง ๆ ว่าผมไม่ค่อยตั้งใจเรียน', add: { score: 1 }, go: 'p_dontknow' }
+    ] }
+  ],
+  p_know: [
+    { say: 'k', text: 'ดีเลย ถ้าเช่นนั้น เมื่อครู่ข้าเรียกเจ้าว่าใคร' },
+    { say: 'me', text: 'เอ่อ… ไจ่… ไจ่อะไรนะครับ' },
+    { say: 'k', fx: 'happy', text: 'ฮ่า ๆ เห็นไหม' },
+    { jump: 'p_217' }
+  ],
+  p_dontknow: [
+    { say: 'k', fx: 'happy', text: 'อย่างน้อยเจ้าก็ไม่ทำเป็นรู้ ข้าชอบแบบนี้มากกว่า' },
+    { jump: 'p_217' }
+  ],
+  p_217: [
+    { say: 'k', text: 'จื่อลู่ศิษย์คนโตของข้า ชอบทำเป็นรู้ทุกเรื่อง ข้าเลยเคยบอกเขาไว้ว่า' },
+    { say: 'k', text: '知之為知之，不知為不知，是知也 รู้ก็ว่ารู้ ไม่รู้ก็ว่าไม่รู้ นี่แหละคือความรู้' },
+    { card: 'D' },
+    { say: 'k', text: '學而時習之，不亦說乎。有朋自遠方來，不亦樂乎。' },
+    { say: 'k', text: 'เรียนแล้วหมั่นฝึกใช้ มิใช่เรื่องน่ายินดีหรือ มีสหายมาแต่แดนไกล มิใช่เรื่องน่าสุขใจหรือ' },
+    { say: 'k', fx: 'happy', text: 'เจ้าคงเป็นสหายจากแดนไกลคนนั้นกระมัง เช่นนั้นก็จงเรียน แล้วเอาไปใช้' },
+    { card: 'A' },
+    { say: 'k', text: 'เอาละ บอกข้ามาซิ ที่บ้านของเจ้า มีเรื่องใดค้างใจอยู่' },
+    { say: 'me', text: 'ก็… มีเรื่องงานกลุ่มครับ เพื่อนในกลุ่มชอบโยนงานมาให้ผม' },
+    { say: 'k', fx: 'think', text: 'งานกลุ่ม? ข้าไม่รู้จักคำนี้ แต่ข้ารู้จักคนที่ชอบโยนภาระให้ผู้อื่นดี' },
+    { say: 'n', text: 'เธอยังพูดไม่ทันจบ เสียงลมก็ดังขึ้นอีกครั้ง แล้วทุกอย่างก็เลือนเป็นสีขาว' },
+    { hide: true },
+    { jump: 'c1' }
+  ],
+
+  c1: [
+    { title: 'ปัญหาที่ 1', sub: 'งานกลุ่มที่ไม่มีใครอยากทำ' },
+    { bg: 'classroom' },
+    { say: 'n', text: 'ผมสะดุ้งตื่น ทั้งห้องหันมามอง อาจารย์แค่ยิ้ม แล้วอ่านต่อ' },
+    { say: 'think', text: 'ฝันอะไรของเรา… ชัดยังกับเรื่องจริง' },
+    { bg: 'room' },
+    { say: 'n', text: 'คืนนั้น แชตกลุ่มรายงานก็เด้งขึ้นมา' },
+    { chatOpen: 'กลุ่มรายงานประวัติศาสตร์ (4 คน)' },
+    { msg: { from: 'เต้ย', text: 'รายงานส่งวันศุกร์นะทุกคน' } },
+    { msg: { from: 'เต้ย', text: '[name] แกเก่งเรื่องนี้สุดในกลุ่ม แกเขียนบทวิเคราะห์ไปเลยดิ' } },
+    { msg: { from: 'มิ้นท์', text: '+1 เดี๋ยวเราทำสไลด์ให้' } },
+    { msg: { from: 'เต้ย', text: 'เดี๋ยวพวกเราช่วยตอนท้าย ๆ เนอะ ขอบใจล่วงหน้านะะะ' } },
+    { msg: { from: 'ทอย', text: '(ส่งสติกเกอร์ยกนิ้ว)', sys: true } },
+    { chatClose: true },
+    { say: 'think', text: 'บทวิเคราะห์คือครึ่งหนึ่งของคะแนน และคำว่า “ช่วยตอนท้าย” แปลว่าไม่ช่วยเลย ครั้งที่แล้วก็แบบนี้' },
+    { say: 'think', text: 'ถ้าปฏิเสธ ก็กลายเป็นคนไม่มีน้ำใจ ถ้ารับ ก็ต้องทำคนเดียวอีกแล้ว' },
+    { say: 'n', text: 'ผมวางโทรศัพท์ แล้วหลับไปทั้งที่ยังคิดไม่ออก' },
+    { bg: 'dusk' },
+    { show: true },
+    { say: 'k', text: 'กลับมาอีกแล้วรึ สหายจากแดนไกล หน้าเจ้าเหมือนคนกินข้าวไม่อิ่ม' },
+    { say: 'me', text: 'เรื่องงานกลุ่มที่เล่าค้างไว้ครับ…' },
+    { say: 'n', text: 'ผมเล่าทุกอย่างให้เธอฟัง เรื่องแชต เรื่องคำว่า “ช่วยตอนท้าย” และเรื่องที่ผมไม่กล้าปฏิเสธ' },
+    { say: 'k', fx: 'think', text: 'ข้าถามเจ้าข้อหนึ่ง ถ้าเจ้าเป็นเต้ย แล้วมีคนโยนงานทั้งหมดมาให้เจ้า เจ้าจะรู้สึกเช่นไร' },
+    { choice: [
+      { text: 'ก็คงโกรธครับ แต่เต้ยไม่ใช่คนแบบผมนี่ครับ', go: 'c1_da' },
+      { text: 'ผมคงไม่ชอบ… แต่ผมก็ไม่เคยบอกเต้ยตรง ๆ เหมือนกัน', add: { score: 1 }, go: 'c1_db' }
+    ] }
+  ],
+  c1_da: [
+    { say: 'k', text: 'คนเราต่างกันก็จริง แต่ใจที่ไม่อยากถูกเอาเปรียบ ข้ายังไม่เคยเห็นใครไม่มี' },
+    { jump: 'c1_teach' }
+  ],
+  c1_db: [
+    { say: 'k', fx: 'happy', text: 'เจ้ามองเห็นตัวเองก่อนมองคนอื่น นั่นแหละจุดเริ่มที่ถูก' },
+    { jump: 'c1_teach' }
+  ],
+  c1_teach: [
+    { say: 'k', text: 'จื่อก้งศิษย์ของข้า เคยถามว่า มีคำเดียวไหม ที่ถือไว้ใช้ได้ทั้งชีวิต' },
+    { say: 'k', text: 'ข้าตอบว่า คงเป็นคำว่า “ซู่” 恕 己所不欲，勿施於人 สิ่งใดที่ตนไม่ปรารถนา อย่าทำแก่ผู้อื่น' },
+    { card: 'B' },
+    { say: 'me', text: 'แต่ผมไม่ได้ทำอะไรใครนะครับ เต้ยต่างหากที่ทำกับผม' },
+    { say: 'k', text: 'ใช่ ข้าจึงให้เจ้าใช้มันสองทาง' },
+    { say: 'k', text: 'ทางแรก ใช้ถามตัวเจ้า ว่าเจ้าเคยโยนภาระให้ใครโดยไม่รู้ตัวบ้างหรือไม่' },
+    { say: 'k', text: 'ทางที่สอง ใช้เป็นคำถาม ชวนให้เขาลองยืนในที่ของเจ้า ไม่ใช่ต่อว่า แต่ถาม' },
+    { say: 'k', fx: 'happy', text: 'คนส่วนมากไม่ได้ใจร้ายหรอก เขาแค่ไม่เคยลองยืนในที่ของคนอื่น' },
+    { say: 'n', text: 'ลมพัดดอกซิ่งร่วงลงบนแขนเสื้อของเธอ แล้วภาพทั้งหมดก็ค่อย ๆ ซีดจาง' },
+    { hide: true },
+    { bg: 'room_morning' },
+    { say: 'n', text: 'เช้าวันรุ่งขึ้น ผมเปิดแชตกลุ่มอีกครั้ง' },
+    { present: 'c1', prompt: 'เพื่อนในกลุ่มโยนบทวิเคราะห์ทั้งหมดให้คุณทำคนเดียว แล้วบอกว่าจะ “ช่วยตอนท้าย” คุณจะตอบในแชตกลุ่มอย่างไร', good: 'B', outcomes: { B: 'c1_B', D: 'c1_D' }, other: 'c1_X' }
+  ],
+  c1_B: [
+    { chatOpen: 'กลุ่มรายงานประวัติศาสตร์ (4 คน)' },
+    { msg: { from: 'me', text: 'เต้ย ถ้าเป็นแก แล้วมีคนโยนบทวิเคราะห์ทั้งหมดให้แกทำคนเดียว แกจะโอเคไหม' } },
+    { msg: { from: 'me', text: 'เราไม่ได้โกรธนะ แต่อยากแบ่งงานกันจริง ๆ แบ่งบทวิเคราะห์เป็นสี่ส่วน แล้วเราเรียบเรียงรวมให้' } },
+    { msg: { from: 'เต้ย', text: '…เออ ก็จริง ถ้าเป็นเราก็คงไม่โอเค' } },
+    { msg: { from: 'มิ้นท์', text: 'งั้นเราเอาส่วนบริบททางสังคมนะ' } },
+    { msg: { from: 'เต้ย', text: 'เราเอาลำดับเหตุการณ์ ขอโทษที่ชอบโยนนะแก' } },
+    { chatClose: true },
+    { explain: { card: 'B', kind: 'good', title: 'ใช้ 恕 เป็นคำถาม ไม่ใช่คำกล่าวหา', body: [
+      'การชวนเพื่อนให้ลองยืนในที่ของเรา ทำให้เขาเห็นปัญหาเอง โดยไม่ต้องทะเลาะกัน',
+      'ในชีวิตจริง ใช้ได้กับงานกลุ่ม ที่ทำงาน และในครอบครัว เริ่มจากถามว่า “ถ้าเป็นเรา เราอยากถูกทำแบบนี้ไหม” ก่อนจะตัดสินใคร',
+      'อีกด้านของ 恕 คือหันมาถามตัวเองด้วย ว่าเราเคยโยนภาระให้ใครโดยไม่รู้ตัวบ้างหรือเปล่า'
+    ] } },
+    { jump: 'c2' }
+  ],
+  c1_D: [
+    { chatOpen: 'กลุ่มรายงานประวัติศาสตร์ (4 คน)' },
+    { msg: { from: 'me', text: 'บอกตรง ๆ นะ ส่วนบริบทเศรษฐกิจเราไม่รู้เรื่องเลย เต้ยช่วยส่วนนั้นหน่อย' } },
+    { msg: { from: 'เต้ย', text: 'ได้ ๆ ส่วนนั้นเราทำเอง ที่เหลือแกจัดการนะ' } },
+    { chatClose: true },
+    { say: 'think', text: 'ได้คนช่วยไปส่วนเดียว ที่เหลือก็ยังเป็นของผมอยู่ดี' },
+    { explain: { card: 'D', kind: 'half', title: 'ได้คนช่วย แต่ยังไม่ยุติธรรม', body: [
+      'การยอมรับว่าไม่รู้ (2.17) ทำให้ได้ความช่วยเหลือในส่วนที่ไม่ถนัด',
+      'แต่ต้นเหตุของปัญหาคือการแบ่งงานที่ไม่ยุติธรรม ซึ่งคำสอนข้อนี้ไม่ได้แตะ ลองหาคำสอนที่ชวนให้เพื่อนมองจากมุมของเรา'
+    ] } },
+    { retry: 'c1' }
+  ],
+  c1_X: [
+    { say: 'think', text: '“เรียนแล้วหมั่นฝึกใช้”… งั้นก็ถือว่าเป็นการฝึกละกัน' },
+    { chatOpen: 'กลุ่มรายงานประวัติศาสตร์ (4 คน)' },
+    { msg: { from: 'me', text: 'ได้ เดี๋ยวเราทำเอง' } },
+    { msg: { from: 'เต้ย', text: 'แกดีที่สุดในโลก' } },
+    { chatClose: true },
+    { say: 'n', text: 'ผมนั่งทำรายงานจนตีสาม แล้วรู้สึกว่าตัวเองถูกใช้อีกครั้ง' },
+    { explain: { card: 'A', kind: 'bad', title: 'เอาคำสอนมาเป็นข้ออ้างให้ตัวเองยอมทน', body: [
+      '學而時習之 พูดถึงการนำความรู้ไปฝึกใช้ ไม่ได้แปลว่าต้องรับภาระทุกอย่างไว้คนเดียว',
+      'การใช้คำสอนแบบตายตัว โดยไม่ดูต้นเหตุของปัญหา ทำให้คำสอนกลายเป็นข้ออ้าง ลองเลือกข้อที่ตรงกับเรื่องการแบ่งงานกับเพื่อน'
+    ] } },
+    { retry: 'c1' }
+  ],
+
+  c2: [
+    { title: 'ปัญหาที่ 2', sub: 'ภาพแคปที่ส่งต่อกันในแชต' },
+    { bg: 'classroom', place: 'ห้องเรียน · ก่อนคาบเช้า' },
+    { say: 'n', text: 'สองวันต่อมา ระหว่างรอคาบเริ่ม ทุกคนในห้องก้มหน้าดูโทรศัพท์พร้อมกัน' },
+    { chatOpen: 'แก๊งหลังห้อง (12 คน)' },
+    { msg: { from: 'ทอย', text: '(ส่งรูปภาพ) แคปมาจากอีกกลุ่มนะ', sys: false } },
+    { msg: { from: 'ทอย', text: 'เขาว่าฝนได้ A วิชาอาจารย์วิทย์ เพราะเป็นหลานอาจารย์' } },
+    { msg: { from: 'มิ้นท์', text: 'จริงดิ ถึงว่าคะแนนสูงผิดปกติ' } },
+    { msg: { from: 'เต้ย', text: 'ส่งต่อให้กลุ่มคณะแล้วนะ คนจะได้รู้' } },
+    { msg: { from: 'ทอย', text: '[name] แกนั่งข้างฝนนี่ แกว่าไง' } },
+    { chatClose: true },
+    { say: 'think', text: 'ฝนนั่งอ่านหนังสือในห้องสมุดทุกเย็น แต่ผมก็ไม่รู้จริง ๆ ว่าเธอเป็นหลานใคร' },
+    { say: 'think', text: 'ถ้าเงียบ ก็เหมือนเห็นด้วย ถ้าแย้ง ก็ไม่มีหลักฐานอะไรเลย' },
+    { say: 'n', text: 'อาจารย์ยังไม่เข้าห้อง ผมฟุบลงกับโต๊ะ' },
+    { bg: 'road' },
+    { show: true },
+    { say: 'k', text: 'วันนี้เราอยู่กลางทางสู่แคว้นเว่ย นั่งลงเถิด เท้าข้าก็ปวดเหมือนกัน' },
+    { say: 'n', text: 'ผมเล่าเรื่องภาพแคปให้เธอฟัง และเรื่องที่ทุกคนเชื่อไปแล้ว ก่อนจะมีใครถามฝนสักคำ' },
+    { say: 'k', fx: 'think', text: 'ภาพที่ส่งต่อกันได้ไกลในพริบตา… โลกของเจ้าช่างน่ากลัว' },
+    { say: 'k', text: 'แต่สิ่งที่อยู่ในภาพนั้น ข้ารู้จักดี แคว้นไหนก็มีคนชอบเล่าเรื่องที่ตนไม่ได้เห็นเอง' },
+    { say: 'k', text: '道聽而塗說，德之棄也 ได้ยินกลางทาง แล้วเล่าต่อกลางทาง คือการทิ้งคุณธรรม' },
+    { say: 'k', fx: 'sad', text: 'ข้าเองก็ถูกลือมานักต่อนัก บางคนว่าข้าอยากได้ตำแหน่งจนตัวสั่น บางคนว่าข้าเหมือนหมาไร้บ้าน' },
+    { say: 'me', text: 'แล้วอาจารย์ทำยังไงครับ' },
+    { say: 'k', fx: 'happy', text: 'เรื่องหมาไร้บ้าน ข้ายอมรับว่าจริง ข้าไม่มีบ้านให้กลับจริง ๆ ฮ่า ๆ' },
+    { say: 'k', text: 'ส่วนเรื่องอื่น ข้าห้ามปากใครไม่ได้ ข้าแค่สอนศิษย์ไม่ให้เชื่อตามกันง่าย ๆ' },
+    { choice: [
+      { text: 'แต่ถ้าทุกคนพูดตรงกัน ก็น่าจะมีมูลอยู่บ้างไม่ใช่เหรอครับ', go: 'c2_da' },
+      { text: 'ผมควรไปถามฝนตรง ๆ ไหมครับ', add: { score: 1 }, go: 'c2_db' }
+    ] }
+  ],
+  c2_da: [
+    { say: 'k', fx: 'think', text: 'นั่นแหละที่ข้ากลัว ยิ่งคนพูดตรงกันมาก เรายิ่งเลิกตรวจดู' },
+    { jump: 'c2_teach' }
+  ],
+  c2_db: [
+    { say: 'k', fx: 'happy', text: 'เจ้าคิดถึงคนที่ถูกพูดถึง ก่อนคิดถึงคนที่พูด ดีมาก' },
+    { jump: 'c2_teach' }
+  ],
+  c2_teach: [
+    { say: 'k', text: '眾惡之，必察焉；眾好之，必察焉' },
+    { say: 'k', text: 'เมื่อคนทั้งหลายเกลียดใคร ต้องพิจารณาให้ถ้วน เมื่อคนทั้งหลายรักใคร ก็ต้องพิจารณาให้ถ้วนเช่นกัน' },
+    { card: 'E' },
+    { say: 'k', text: 'ความเห็นของคนหมู่มาก ไม่ใช่หลักฐาน มันเป็นแค่เสียงที่ดัง' },
+    { say: 'k', fx: 'think', text: 'แต่จำไว้ด้วย การพิจารณาไม่ใช่การจับผิด เจ้าตรวจดูเพื่อให้ความยุติธรรมกับคน ไม่ใช่เพื่อเอาชนะ' },
+    { hide: true },
+    { bg: 'classroom', place: 'ห้องเรียน · ก่อนคาบเช้า' },
+    { say: 'n', text: 'ผมสะดุ้งตื่นบนโต๊ะเรียน แชตกลุ่มยังเด้งไม่หยุด' },
+    { present: 'c2', prompt: 'ภาพแคปกล่าวหาว่าฝนได้เกรดเพราะเป็นหลานอาจารย์ เพื่อนส่งต่อกันไปหลายกลุ่มแล้ว และทอยถามความเห็นคุณ', good: 'E', outcomes: { E: 'c2_E', D: 'c2_D', B: 'c2_B' }, other: 'c2_X' }
+  ],
+  c2_E: [
+    { chatOpen: 'แก๊งหลังห้อง (12 คน)' },
+    { msg: { from: 'me', text: 'ภาพแคปนี้ใครพิมพ์คนแรก มีใครเห็นกับตาไหม' } },
+    { msg: { from: 'ทอย', text: 'ไม่รู้ดิ เขาส่งต่อกันมา' } },
+    { msg: { from: 'me', text: 'งั้นเรายังไม่รู้อะไรเลยนะ เดี๋ยวเราถามฝนเอง ระหว่างนี้อย่าเพิ่งส่งต่อได้ไหม' } },
+    { msg: { from: 'มิ้นท์', text: 'โอเค เราลบในกลุ่มคณะก่อนดีกว่า' } },
+    { chatClose: true },
+    { say: 'n', text: 'ตอนเย็น ผมถามฝนตรง ๆ เธอหัวเราะเสียงแห้ง แล้วเปิดสมุดจดที่เต็มไปด้วยเส้นปากกาให้ดู' },
+    { say: 'n', text: 'อาจารย์วิทย์ไม่ใช่ญาติของเธอ ส่วนคนที่เริ่มลือ คือคนที่ได้คะแนนน้อยกว่าเธอสองคะแนน' },
+    { explain: { card: 'E', kind: 'good', title: 'ถามหาต้นทาง ก่อนตัดสินคน', body: [
+      'หลัก 必察焉 “ต้องพิจารณาให้ถ้วน” นำไปสู่สามอย่าง ถามว่าใครพูดคนแรก หยุดการส่งต่อ และไปฟังคนที่ถูกพูดถึงโดยตรง',
+      'ในชีวิตจริง ก่อนแชร์ข่าวหรือภาพแคป ให้ถามสามข้อ ใครพูดคนแรก มีใครเห็นเอง และเราได้ฟังอีกฝ่ายหรือยัง',
+      'หลักนี้ใช้กับกระแสชื่นชมด้วย คนที่ทุกคนรัก ก็ควรถูกพิจารณาเช่นเดียวกัน'
+    ] } },
+    { jump: 'c3' }
+  ],
+  c2_D: [
+    { chatOpen: 'แก๊งหลังห้อง (12 คน)' },
+    { msg: { from: 'me', text: 'เราไม่รู้นะว่าจริงไหม เลยไม่ขอออกความเห็น' } },
+    { msg: { from: 'ทอย', text: 'โอเค ๆ' } },
+    { msg: { from: 'เต้ย', text: '(ส่งต่อไปอีกสองกลุ่ม)', sys: true } },
+    { chatClose: true },
+    { say: 'think', text: 'ผมพูดความจริง แต่ข่าวลือก็ยังวิ่งต่อไปอยู่ดี' },
+    { explain: { card: 'D', kind: 'half', title: 'ไม่เติมข่าวลือ แต่ไม่ได้หยุดมัน', body: [
+      'การยอมรับว่าไม่รู้ (2.17) ทำให้ตัวเราไม่ไปเติมข่าวลือ',
+      'แต่ไม่ได้หยุดคนอื่น และไม่ได้หาความจริงให้ฝน ลองหาคำสอนที่บอกว่าควรทำอย่างไร เมื่อคนหมู่มากตัดสินใครไปแล้ว'
+    ] } },
+    { retry: 'c2' }
+  ],
+  c2_B: [
+    { chatOpen: 'แก๊งหลังห้อง (12 คน)' },
+    { msg: { from: 'me', text: 'ถ้าเป็นแกโดนลือแบบนี้ แกจะรู้สึกยังไง' } },
+    { msg: { from: 'ทอย', text: 'ก็ถ้ามันจริง ก็สมควรโดนป่ะ' } },
+    { chatClose: true },
+    { say: 'think', text: 'คำถามดี แต่ทุกคนก็ยังเชื่อว่ามันจริงอยู่ดี' },
+    { explain: { card: 'B', kind: 'half', title: 'ชวนให้เห็นใจ แต่ยังไม่ได้ตรวจสอบ', body: [
+      '恕 ชวนให้เพื่อนเห็นใจฝนได้บ้าง',
+      'แต่ทุกคนยังเชื่อว่าข่าวลือเป็นความจริง สิ่งที่ขาดไปคือการตรวจสอบก่อนตัดสิน'
+    ] } },
+    { retry: 'c2' }
+  ],
+  c2_X: [
+    { say: 'think', text: 'เรียนแล้วฝึกใช้… งั้นลองสืบเองแบบนักสืบเลยละกัน' },
+    { chatOpen: 'แก๊งหลังห้อง (12 คน)' },
+    { msg: { from: 'me', text: 'เดี๋ยวเราไล่ส่องโซเชียลของฝนให้ ว่าเป็นญาติใครบ้าง' } },
+    { msg: { from: 'มิ้นท์', text: 'แกจะสืบเลยเหรอ น่ากลัวอะ' } },
+    { chatClose: true },
+    { explain: { card: 'A', kind: 'bad', title: 'การนำไปใช้ ไม่ได้แปลว่าสอดส่องชีวิตคนอื่น', body: [
+      'การไล่ส่องชีวิตส่วนตัวของฝน ยิ่งทำร้ายเธอ และไม่ได้ทำให้รู้ความจริงเรื่องเกรด',
+      'ปัญหานี้ต้องการการพิจารณาข้อเท็จจริงอย่างเป็นธรรม ไม่ใช่การจับผิด'
+    ] } },
+    { retry: 'c2' }
+  ],
+
+  c3: [
+    { title: 'ปัญหาที่ 3', sub: 'เส้นทางที่แม่ไม่ได้เลือกให้' },
+    { bg: 'room', place: 'หอพัก · คืนวันอาทิตย์' },
+    { say: 'n', text: 'คืนวันอาทิตย์ แม่โทรมาเหมือนทุกสัปดาห์' },
+    { say: 'mom', text: 'ลูก แม่ไปคุยกับป้ามา ป้าบอกปีหน้ามีสอบรับราชการ ลูกลองเตรียมสอบดีไหม' },
+    { say: 'me', text: 'แต่ผมอยากเรียนต่อโทประวัติศาสตร์นะแม่ ผมอยากทำงานพิพิธภัณฑ์' },
+    { say: 'mom', text: 'พิพิธภัณฑ์? เงินเดือนเท่าไหร่ลูก แม่ไม่ได้ห้ามนะ แต่แม่เห็นคนเรียนจบแล้วไม่มีงานทำเยอะแยะ' },
+    { say: 'mom', text: 'พ่อเขาไม่พูดอะไรหรอก แต่แม่รู้ว่าเขาก็ห่วง' },
+    { say: 'think', text: 'ทุกครั้งที่คุยเรื่องนี้ จบที่ผมขึ้นเสียง แล้วแม่ก็เงียบไปหลายวัน' },
+    { say: 'me', text: 'ขอผมคิดก่อนนะแม่' },
+    { bg: 'river' },
+    { show: true },
+    { say: 'k', text: 'คืนนี้ข้านอนไม่หลับ เลยออกมานั่งริมแม่น้ำ เจ้าก็มาพอดี' },
+    { say: 'n', text: 'ผมเล่าเรื่องแม่ให้เธอฟัง เธอนั่งฟังเงียบ ๆ จนจบ' },
+    { say: 'k', fx: 'sad', text: 'พ่อของข้าตายตั้งแต่ข้ายังเล็ก แม่เลี้ยงข้ามาอย่างลำบาก' },
+    { say: 'k', text: '吾少也賤，故多能鄙事 ตอนเด็กข้ายากจน จึงทำงานต่ำต้อยได้หลายอย่าง' },
+    { say: 'k', text: 'แม่ข้าก็คงอยากให้ข้ามีชีวิตที่มั่นคง แต่ข้าตั้งใจเลือกทางของการเรียนตั้งแต่อายุสิบห้า' },
+    { say: 'me', text: 'แล้วตอนที่ความเห็นไม่ตรงกับแม่ อาจารย์ทำยังไงครับ' },
+    { choice: [
+      { text: 'หรือต้องทำตามที่พ่อแม่ต้องการครับ ถึงจะเรียกว่ากตัญญู', go: 'c3_da' },
+      { text: 'ผมอยากให้แม่เข้าใจ แต่ไม่อยากทะเลาะกันอีกแล้วครับ', add: { score: 1 }, go: 'c3_db' }
+    ] }
+  ],
+  c3_da: [
+    { say: 'k', fx: 'think', text: 'ไม่ใช่ทั้งหมด ถ้าพ่อแม่ผิด ลูกก็ต้องทักท้วง เพียงแต่ต้องรู้ว่าจะทักท้วงอย่างไร' },
+    { jump: 'c3_teach' }
+  ],
+  c3_db: [
+    { say: 'k', fx: 'happy', text: 'เจ้าเห็นแล้วว่าปัญหาไม่ใช่แค่ใครถูก แต่คือจะรักษาคนที่เรารักไว้อย่างไร' },
+    { jump: 'c3_teach' }
+  ],
+  c3_teach: [
+    { say: 'k', text: '事父母幾諫，見志不從，又敬不違，勞而不怨' },
+    { say: 'k', text: 'ปรนนิบัติพ่อแม่ ทักท้วงอย่างนุ่มนวล เห็นว่าท่านยังไม่รับ ก็ยังคงเคารพ ไม่ขัดแข็ง เหนื่อยก็ไม่ขุ่นเคือง' },
+    { card: 'F' },
+    { say: 'me', text: 'ในยุคของผม คนยังเถียงกันอยู่เลยครับ ว่า “ไม่ขัด” แปลว่าต้องยอมตามหรือเปล่า' },
+    { say: 'k', fx: 'happy', text: 'ศิษย์ของข้าก็เถียงกันเรื่องนี้ทุกวัน' },
+    { say: 'k', text: 'ข้าบอกได้แค่ว่า หัวใจอยู่ที่คำว่านุ่มนวล ใจเย็น รอจังหวะ แล้วพูดอีก ไม่ใช่พูดครั้งเดียวแล้วตัดขาดกัน' },
+    { say: 'k', text: 'ความกตัญญูไม่ใช่แค่ทำตาม แต่คือไม่ปล่อยให้ความเห็นต่าง ทำลายความเคารพที่มีต่อกัน' },
+    { say: 'n', text: 'เธอมองแม่น้ำที่ไหลไม่หยุด แล้วพูดเบา ๆ' },
+    { say: 'k', text: '逝者如斯夫，不舍晝夜 สิ่งที่ผ่านไปก็เป็นเช่นนี้ ไม่หยุดทั้งวันและคืน' },
+    { say: 'k', fx: 'sad', text: 'แม่ของเจ้า จะไม่อยู่รอให้เจ้าพร้อมคุยตลอดไปหรอกนะ' },
+    { hide: true },
+    { bg: 'room_morning', place: 'หอพัก · เช้าวันจันทร์' },
+    { say: 'n', text: 'เช้าวันจันทร์ ผมกดโทรหาแม่ก่อนเข้าเรียน' },
+    { present: 'c3', prompt: 'แม่อยากให้คุณสอบรับราชการ แต่คุณอยากเรียนต่อและทำงานพิพิธภัณฑ์ ทุกครั้งที่คุยกัน จบลงด้วยการทะเลาะ คุณจะคุยกับแม่อย่างไร', good: 'F', outcomes: { F: 'c3_F', B: 'c3_B', E: 'c3_E', D: 'c3_D' }, other: 'c3_X' }
+  ],
+  c3_F: [
+    { say: 'me', text: 'แม่ ผมขอโทษที่ชอบขึ้นเสียงเวลาคุยเรื่องนี้นะ' },
+    { say: 'me', text: 'ผมรู้ว่าแม่ห่วงเรื่องเงิน เลยลองทำแผนมา ระหว่างเรียนโท ผมจะสมัครเป็นผู้ช่วยวิจัย แล้วฝึกงานพิพิธภัณฑ์ช่วงปิดเทอม' },
+    { say: 'me', text: 'ถ้าผ่านไปหนึ่งปีแล้วไม่ไหวจริง ๆ เรามาคุยกันใหม่ได้ไหมครับ' },
+    { say: 'mom', text: '…ลูกคิดมาขนาดนี้เลยเหรอ' },
+    { say: 'mom', text: 'แม่ก็ยังห่วงอยู่ดีนะ แต่ส่งแผนมาให้แม่อ่านหน่อย แล้ววันศุกร์กลับมากินข้าวที่บ้าน' },
+    { explain: { card: 'F', kind: 'good', title: 'ทักท้วงอย่างนุ่มนวล และไม่ตัดขาดกัน', body: [
+      'การเริ่มจากรับรู้ความห่วงของแม่ แล้วเสนอทางที่แม่ยังมีส่วนร่วม คือการทักท้วงอย่างนุ่มนวล (幾諫) แทนการเถียงให้ชนะ',
+      'ในชีวิตจริง ความกตัญญูไม่จำเป็นต้องแปลว่ายอมตามทุกอย่าง แต่คือรักษาความเคารพไว้ระหว่างที่ยังเห็นต่าง และพูดอีกครั้งเมื่อถึงจังหวะ',
+      'ข้อถกเถียง: ผู้อ่านตีความ 又敬不違 ต่างกัน เกมนี้เลือกเน้นการรักษาความสัมพันธ์ ไม่ใช่การยอมจำนน'
+    ] } },
+    { jump: 'end' }
+  ],
+  c3_B: [
+    { say: 'me', text: 'แม่ ถ้าแม่เป็นผม แล้วมีคนมาเลือกอาชีพให้ แม่จะชอบไหม' },
+    { say: 'mom', text: '…ลูกพูดเหมือนแม่เป็นคนผิดเลยนะ' },
+    { say: 'n', text: 'ปลายสายเงียบไปนาน แม่ไม่ได้โกรธ แต่ผมได้ยินว่าแม่เสียใจ' },
+    { explain: { card: 'B', kind: 'half', title: 'คำถามดี แต่ฟังเหมือนคำกล่าวหา', body: [
+      '恕 ชวนให้แม่ลองยืนในที่ของลูก ซึ่งมีเหตุผล',
+      'แต่เมื่อใช้ย้อนถามพ่อแม่ทันที มันฟังเหมือนคำกล่าวหา ความสัมพันธ์ในครอบครัวต้องการวิธีทักท้วงที่นุ่มนวลกว่านี้'
+    ] } },
+    { retry: 'c3' }
+  ],
+  c3_E: [
+    { say: 'me', text: 'แม่ ผมหาข้อมูลมาแล้วนะ คนจบประวัติศาสตร์มีงานทำตั้งเยอะ ที่แม่ได้ยินมามันไม่จริงทั้งหมดหรอก' },
+    { say: 'mom', text: 'แม่ไม่ได้อยากฟังตัวเลขนะลูก แม่แค่กลัว' },
+    { explain: { card: 'E', kind: 'half', title: 'ข้อมูลถูก แต่ยังไม่ได้ฟังใจแม่', body: [
+      'การพิจารณาข้อมูลแทนการเชื่อตามคนอื่น (15.28) ช่วยแก้ความเข้าใจผิดเรื่องอาชีพได้',
+      'แต่ความกังวลของแม่ไม่ใช่เรื่องข้อมูลอย่างเดียว เป็นเรื่องความรู้สึกด้วย ลองหาคำสอนเรื่องการคุยกับพ่อแม่โดยตรง'
+    ] } },
+    { retry: 'c3' }
+  ],
+  c3_D: [
+    { say: 'me', text: 'จริง ๆ ผมก็ยังไม่รู้หรอกแม่ ว่าจบไปจะได้เงินเดือนเท่าไหร่' },
+    { say: 'mom', text: 'นั่นแหละที่แม่กลัว' },
+    { explain: { card: 'D', kind: 'half', title: 'ซื่อตรง แต่ทำให้แม่กังวลกว่าเดิม', body: [
+      'การยอมรับว่าไม่รู้ (2.17) เป็นความซื่อตรง',
+      'แต่ถ้ายอมรับแล้วไม่มีอะไรต่อ แม่ก็ยิ่งกังวล สิ่งที่ขาดคือวิธีพูดที่ทำให้แม่รู้สึกว่าลูกยังรับฟัง'
+    ] } },
+    { retry: 'c3' }
+  ],
+  c3_X: [
+    { say: 'me', text: 'แม่ ขงจื้อบอกว่าเรียนแล้วต้องฝึกใช้ ผมจะเรียนต่อ จบนะ' },
+    { say: 'mom', text: 'ขงจื้อเขาจะส่งเงินให้ลูกเรียนเหรอ' },
+    { say: 'n', text: 'สายถูกตัดไป ผมนั่งมองหน้าจอนิ่ง ๆ' },
+    { explain: { card: 'A', kind: 'bad', title: 'คำสอนกลายเป็นอาวุธปิดการสนทนา', body: [
+      'การยกคำสอนมาเป็นข้ออ้างตัดบท ทำให้คำสอนกลายเป็นอาวุธ ไม่ใช่วิธีคิด',
+      'ปัญหานี้ต้องการวิธีคุยกับพ่อแม่ ที่รักษาความสัมพันธ์ไว้ได้'
+    ] } },
+    { retry: 'c3' }
+  ],
+
+  end: [
+    { bg: 'courtyard', place: 'ใต้ต้นซิ่ง · ฝันคืนสุดท้ายของเดโม' },
+    { show: true },
+    { say: 'k', text: 'สหายจากแดนไกล หลายคืนมานี้ เจ้าเล่าเรื่องโลกของเจ้าให้ข้าฟังไม่หยุด' },
+    { say: 'k', text: 'งานกลุ่ม ภาพที่ส่งต่อกันได้ไกล และแม่ที่โทรมาทุกวันอาทิตย์' },
+    { say: 'k', fx: 'happy', text: 'โลกของเจ้าเปลี่ยนไปมาก แต่ใจคนกลับเหมือนเดิม' },
+    { branch: 'closeness' }
+  ],
+  end_close: [
+    { say: 'k', text: 'เจ้าเรียกข้าว่าท่านอาจารย์มานานพอแล้ว' },
+    { say: 'k', fx: 'shy', text: 'ต่อจากนี้ เรียกข้าว่า “จ้งหนี” เถิด… คนที่เสมอกันเขาเรียกกันอย่างนั้น' },
+    { kname: 'จ้งหนี' },
+    { say: 'me', text: '…จ้งหนี' },
+    { say: 'k', fx: 'happy', text: 'อืม ฟังแปลกดี แต่ข้าไม่ว่า' },
+    { jump: 'end_tail' }
+  ],
+  end_normal: [
+    { say: 'k', text: 'เจ้ายังต้องฝึกอีกมาก แต่ข้าเห็นแล้วว่าเจ้าไม่ได้แค่จำ เจ้าเอาไปใช้' },
+    { jump: 'end_tail' }
+  ],
+  end_tail: [
+    { say: 'k', fx: 'think', text: 'แปลกนะ ช่วงนี้ข้าไม่ค่อยฝันเห็นโจวกงเลย' },
+    { say: 'me', text: 'โจวกง?' },
+    { say: 'k', text: 'ปราชญ์ที่ข้านับถือที่สุด เมื่อก่อนข้าฝันเห็นท่านแทบทุกคืน แต่หลัง ๆ มานี้…' },
+    { say: 'k', fx: 'shy', text: '…ช่างเถิด 子不語怪力亂神 ข้าไม่พูดเรื่องประหลาด' },
+    { hide: true },
+    { nvl: [
+      'ผมตื่นขึ้นตอนเช้า แสงแดดลอดผ้าม่านเข้ามา',
+      'ไม่มีอะไรติดมือมาจากความฝันเลย นอกจากสิ่งที่ผมจำได้',
+      'และบางที นั่นอาจเป็นสิ่งเดียวที่สำคัญ'
+    ] },
+    { end: true }
+  ]
+};
+const BRANCHES = {
+  closeness: (v) => (v.score >= 5 ? 'end_close' : 'end_normal')
+};
+/*SCRIPT-END*/
+
+const BGS = {
+  classroom: { world: 'real', place: 'ห้องเรียน · บ่ายวันพฤหัส', svg: '<rect width="1280" height="720" fill="#DCE3EC"/><rect x="80" y="70" width="560" height="230" fill="#3E5A54" opacity=".22"/><rect x="80" y="300" width="560" height="10" fill="#23324A" opacity=".2"/><rect x="820" y="60" width="380" height="260" fill="#EEF2F7" stroke="#23324A" stroke-width="3" opacity=".6"/><path d="M1010 60V320M820 190H1200" stroke="#23324A" stroke-width="3" opacity=".3"/><rect x="0" y="500" width="1280" height="220" fill="#23324A" opacity=".06"/><path d="M0 500H1280" stroke="#23324A" stroke-width="2" opacity=".18"/><rect x="100" y="440" width="320" height="16" rx="3" fill="#23324A" opacity=".2"/><rect x="860" y="440" width="320" height="16" rx="3" fill="#23324A" opacity=".2"/><rect x="130" y="456" width="10" height="120" fill="#23324A" opacity=".15"/><rect x="380" y="456" width="10" height="120" fill="#23324A" opacity=".15"/><rect x="890" y="456" width="10" height="120" fill="#23324A" opacity=".15"/><rect x="1140" y="456" width="10" height="120" fill="#23324A" opacity=".15"/>' },
+  room: { world: 'real', place: 'หอพัก · กลางคืน', svg: '<rect width="1280" height="720" fill="#273046"/><rect x="900" y="90" width="270" height="220" fill="#34405E" stroke="#141A2C" stroke-width="6"/><circle cx="1100" cy="150" r="22" fill="#EDE6D6" opacity=".85"/><path d="M1035 90V310M900 200H1170" stroke="#141A2C" stroke-width="5"/><circle cx="250" cy="380" r="190" fill="#F3D9A4" opacity=".1"/><path d="M230 300L270 300L290 340L210 340Z" fill="#F3D9A4" opacity=".5"/><rect x="246" y="340" width="8" height="120" fill="#141A2C"/><rect x="100" y="460" width="560" height="18" fill="#141A2C"/><rect x="0" y="560" width="1280" height="160" fill="#141A2C" opacity=".5"/><rect x="760" y="430" width="480" height="140" rx="10" fill="#1F2739"/>' },
+  room_morning: { world: 'real', place: 'หอพัก · เช้า', svg: '<rect width="1280" height="720" fill="#E9EEF4"/><rect x="900" y="90" width="270" height="220" fill="#FFF6DF" stroke="#23324A" stroke-width="6" opacity=".9"/><path d="M1035 90V310M900 200H1170" stroke="#23324A" stroke-width="5" opacity=".6"/><path d="M900 310L620 720L1100 720L1170 310Z" fill="#FFF6DF" opacity=".35"/><rect x="100" y="460" width="560" height="18" fill="#23324A" opacity=".25"/><rect x="0" y="560" width="1280" height="160" fill="#23324A" opacity=".06"/><path d="M560 460C560 400 600 380 610 340M580 460C590 410 640 400 660 370M570 460C550 420 520 410 500 390" fill="none" stroke="#5C8A78" stroke-width="6" stroke-linecap="round"/><rect x="545" y="430" width="50" height="32" fill="#8A6A3E" opacity=".7"/>' },
+  courtyard: { world: 'dream', place: 'สำนักในแคว้นหลู่ · ราว 497 ปีก่อน ค.ศ.', svg: '<rect width="1280" height="720" fill="#E9DFCB"/><circle cx="1080" cy="150" r="90" fill="#B23A2B" opacity=".09"/><path d="M0 430C140 390 220 350 330 370C430 390 500 330 610 330C720 330 780 390 880 380C990 370 1060 320 1160 330C1220 336 1250 350 1280 360L1280 720L0 720Z" fill="#2A2420" opacity=".06"/><path d="M10 178C80 176 120 166 150 140L390 140C420 166 460 176 530 178L530 192L10 192Z" fill="#2A2420" opacity=".26"/><path d="M150 140L170 124L370 124L390 140Z" fill="#2A2420" opacity=".26"/><path d="M170 124C160 118 156 110 162 102M370 124C380 118 384 110 378 102" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".26"/><rect x="50" y="192" width="440" height="10" fill="#2A2420" opacity=".13"/><rect x="70" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="180" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="346" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="456" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="30" y="470" width="480" height="18" fill="#2A2420" opacity=".1"/><rect x="200" y="488" width="140" height="12" fill="#2A2420" opacity=".1"/><path d="M0 540L1280 520L1280 720L0 720Z" fill="#2A2420" opacity=".07"/><path d="M1150 520C1140 420 1150 330 1180 260" fill="none" stroke="#2A2420" stroke-width="12" stroke-linecap="round" opacity=".5"/><path d="M1170 300C1120 260 1080 250 1040 254" fill="none" stroke="#2A2420" stroke-width="5" stroke-linecap="round" opacity=".45"/><g fill="#E9C4B8"><circle cx="1040" cy="252" r="12"/><circle cx="1078" cy="250" r="10"/><circle cx="1112" cy="268" r="13"/><circle cx="1180" cy="258" r="14"/><circle cx="1200" cy="290" r="10"/><circle cx="1158" cy="236" r="9"/><ellipse cx="980" cy="400" rx="6" ry="4"/><ellipse cx="900" cy="470" rx="5" ry="3.5"/></g>' },
+  dusk: { world: 'dream', place: 'สำนักในแคว้นหลู่ · ยามเย็น', svg: '<rect width="1280" height="720" fill="#E2CCAE"/><circle cx="980" cy="330" r="130" fill="#B23A2B" opacity=".16"/><path d="M0 430C140 390 220 350 330 370C430 390 500 330 610 330C720 330 780 390 880 380C990 370 1060 320 1160 330C1220 336 1250 350 1280 360L1280 720L0 720Z" fill="#2A2420" opacity=".1"/><path d="M10 178C80 176 120 166 150 140L390 140C420 166 460 176 530 178L530 192L10 192Z" fill="#2A2420" opacity=".34"/><path d="M150 140L170 124L370 124L390 140Z" fill="#2A2420" opacity=".34"/><path d="M170 124C160 118 156 110 162 102M370 124C380 118 384 110 378 102" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".34"/><rect x="50" y="192" width="440" height="10" fill="#2A2420" opacity=".18"/><rect x="70" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="180" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="346" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="456" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="30" y="470" width="480" height="18" fill="#2A2420" opacity=".14"/><rect x="200" y="488" width="140" height="12" fill="#2A2420" opacity=".14"/><path d="M0 540L1280 520L1280 720L0 720Z" fill="#2A2420" opacity=".12"/><path d="M1150 520C1140 420 1150 330 1180 260" fill="none" stroke="#2A2420" stroke-width="12" stroke-linecap="round" opacity=".6"/><g fill="#D9A797"><circle cx="1112" cy="268" r="13"/><circle cx="1180" cy="258" r="14"/><circle cx="1200" cy="290" r="10"/><circle cx="1158" cy="236" r="9"/></g>' },
+  road: { world: 'dream', place: 'ระหว่างทางสู่แคว้นเว่ย · ราว 496 ปีก่อน ค.ศ.', svg: '<rect width="1280" height="720" fill="#E6DECD"/><path d="M0 380C120 300 220 260 330 300C430 336 500 240 620 230C740 220 800 320 900 300C1010 280 1080 200 1180 220C1230 230 1260 250 1280 260L1280 720L0 720Z" fill="#2A2420" opacity=".07"/><path d="M0 470C160 420 260 400 380 430C500 460 560 390 690 400C820 410 900 470 1020 450C1140 430 1210 400 1280 410L1280 720L0 720Z" fill="#2A2420" opacity=".11"/><path d="M0 590C200 560 360 560 520 580C700 600 900 560 1280 570L1280 720L0 720Z" fill="#2A2420" opacity=".14"/><path d="M520 720C560 640 660 590 760 560C820 542 900 530 960 528L966 536C900 540 830 552 780 572C690 608 620 660 640 720Z" fill="#F3ECDD" opacity=".85"/><path d="M180 590V470M174 520L150 500M186 500L210 480" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/><path d="M1090 570V440M1084 490L1060 470M1096 470L1120 452" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/>' },
+  river: { world: 'night', place: 'ริมแม่น้ำ · ยามค่ำ', svg: '<rect width="1280" height="720" fill="#1C2238"/><circle cx="1050" cy="130" r="50" fill="#EDE6D6" opacity=".85"/><path d="M0 380C160 330 300 320 440 350C580 380 700 320 860 320C1020 320 1120 360 1280 350L1280 720L0 720Z" fill="#EDE6D6" opacity=".05"/><path d="M0 450C300 430 600 470 900 450C1060 440 1180 440 1280 446L1280 560C1100 552 900 580 640 570C380 560 200 560 0 570Z" fill="#2E395B"/><path d="M120 480H360M520 500H760M880 470H1100M300 530H520M760 545H980" stroke="#EDE6D6" stroke-width="2" opacity=".18"/><path d="M1000 470H1100" stroke="#EDE6D6" stroke-width="3" opacity=".35"/><path d="M0 560C300 552 600 580 900 572C1060 568 1180 560 1280 562L1280 720L0 720Z" fill="#141A2C"/><path d="M90 620L80 520M110 620L118 530M130 620L126 540M1180 610L1170 500M1200 610L1210 515" stroke="#3A4766" stroke-width="4" stroke-linecap="round"/>' },
+  black: { world: 'dream', place: '', svg: '<rect width="1280" height="720" fill="#15120F"/>' }
+};
+
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage'), frame = $('frame');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SAVE_KEY = 'dream-kongzi-demo-v1';
+  const seg = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('th', { granularity: 'grapheme' }) : null;
+  const graphemes = (s) => seg ? Array.from(seg.segment(s), (x) => x.segment) : Array.from(s);
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ZH = /([　-〿㐀-鿿＀-￯]+)/;
+
+  let S = null;          // game state: label, idx, vars, presentAt, scene
+  let mode = 'idle';
+  let typing = null;
+  let nvlQueue = [];
+  let checkpoint = null;
+  const log = [];
+
+  /* ---------- scaling ---------- */
+  function fit() {
+    const app = $('app');
+    const cs = getComputedStyle(app);
+    const hint = $('rotateHint');
+    hint.hidden = !(window.innerHeight > window.innerWidth * 1.05);
+    const w = app.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const h = app.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - (hint.hidden ? 0 : hint.offsetHeight + 10);
+    const s = Math.max(0.1, Math.min(w / 1280, h / 720));
+    frame.style.width = (1280 * s) + 'px';
+    frame.style.height = (720 * s) + 'px';
+    stage.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+
+  /* ---------- storage ---------- */
+  function readSave() { try { const t = localStorage.getItem(SAVE_KEY); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+  function writeSave(v) { try { if (v) localStorage.setItem(SAVE_KEY, JSON.stringify(v)); else localStorage.removeItem(SAVE_KEY); } catch (e) { /* storage unavailable */ } }
+
+  /* ---------- text helpers ---------- */
+  function fill(t) { return t.replace(/\[name\]/g, S ? S.vars.name : ''); }
+  function pieces(t) { return t.split(ZH).filter((p) => p !== '').map((p) => ({ zh: ZH.test(p), g: graphemes(p) })); }
+  function renderPieces(ps, n) {
+    let out = '', left = n;
+    for (const p of ps) {
+      if (left <= 0) break;
+      const part = p.g.slice(0, left).join('');
+      left -= p.g.length;
+      out += p.zh ? '<span class="zh">' + esc(part) + '</span>' : esc(part);
+    }
+    return out;
+  }
+  function typeInto(el, text, wrapClass, done) {
+    const ps = pieces(text);
+    const total = ps.reduce((a, p) => a + p.g.length, 0);
+    const wrap = (h, end) => (wrapClass ? '<span class="' + wrapClass + '">' + h + '</span>' : h) + (end ? '<span class="caret" aria-hidden="true"></span>' : '');
+    if (reduce) { el.innerHTML = wrap(renderPieces(ps, total), true); typing = null; if (done) done(); return; }
+    let n = 0, last = 0;
+    typing = { finish() { n = total; } };
+    function step(ts) {
+      if (!typing) return;
+      if (!last) last = ts;
+      const add = Math.floor((ts - last) / 26);
+      if (add > 0) { n = Math.min(total, n + add); last = ts; }
+      const end = n >= total;
+      el.innerHTML = wrap(renderPieces(ps, n), end);
+      if (end) { typing = null; if (done) done(); return; }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function announce(t) { $('sr').textContent = t; }
+
+  /* ---------- scene ---------- */
+  function setWorld(w) { stage.classList.remove('world-dream', 'world-real', 'world-night'); stage.classList.add('world-' + w); }
+  function setBg(key, place, instant) {
+    const def = BGS[key] || BGS.black;
+    const apply = () => {
+      $('bg').innerHTML = '<svg viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice">' + def.svg + '</svg>';
+      setWorld(def.world);
+      const p = place || def.place;
+      $('place').textContent = p;
+      $('place').hidden = !p;
+    };
+    S.scene.bg = key; S.scene.place = place || null;
+    if (instant || reduce) { apply(); return; }
+    const f = $('fade'); f.classList.add('on');
+    setTimeout(() => { apply(); f.classList.remove('on'); }, 280);
+  }
+  function showSprite(on) {
+    const sp = $('sprite');
+    if (on) { sp.hidden = false; requestAnimationFrame(() => sp.classList.remove('off')); }
+    else { sp.classList.add('off'); sp.className = 'off'; setTimeout(() => { if (sp.classList.contains('off')) sp.hidden = true; }, 460); }
+    S.scene.sprite = on;
+  }
+  function spriteFx(fx) {
+    const sp = $('sprite');
+    if (sp.hidden) return;
+    sp.classList.remove('fx-happy', 'fx-sad', 'fx-think', 'fx-shy');
+    if (fx) { void sp.offsetWidth; sp.classList.add('fx-' + fx); }
+  }
+  function speakerName(who) {
+    if (who === 'k') return S.vars.kname;
+    if (who === 'me') return S.vars.name;
+    if (who === 'mom') return 'แม่';
+    return '';
+  }
+  function hideTextUi() { $('box').hidden = true; $('choices').hidden = true; }
+
+  /* ---------- runner ---------- */
+  function goto(label) {
+    if (!SCRIPT[label]) { console.error('missing label', label); return false; }
+    S.label = label; S.idx = 0; return true;
+  }
+  function run() {
+    for (let guard = 0; guard < 500; guard++) {
+      const list = SCRIPT[S.label];
+      const step = list && list[S.idx];
+      if (!step) { console.error('script ran off the end of', S.label); return; }
+      S.idx++;
+      if (step.bg) { setBg(step.bg, step.place); continue; }
+      if (step.show) { showSprite(true); continue; }
+      if (step.hide) { showSprite(false); continue; }
+      if (step.add) { for (const k in step.add) S.vars[k] = (S.vars[k] || 0) + step.add[k]; continue; }
+      if (step.kname) { S.vars.kname = step.kname; continue; }
+      if (step.jump) { goto(step.jump); continue; }
+      if (step.branch) { goto(BRANCHES[step.branch](S.vars)); continue; }
+      if (step.retry) { const p = S.presentAt[step.retry]; S.label = p.label; S.idx = p.idx; continue; }
+      if (step.chatOpen) { openChat(step.chatOpen); continue; }
+      if (step.chatClose) { closeChat(); continue; }
+      if (step.title) { showChapter(step); return; }
+      if (step.say) { sayLine(step); return; }
+      if (step.nvl) { openNvl(step.nvl); return; }
+      if (step.msg) { addMsg(step.msg); return; }
+      if (step.choice) { showChoices(step.choice); return; }
+      if (step.card) { gainCard(step.card); return; }
+      if (step.present) { S.presentAt[step.present] = { label: S.label, idx: S.idx - 1 }; openPresent(step); return; }
+      if (step.explain) { openExplain(step.explain); return; }
+      if (step.end) { showEnding(); return; }
+      console.error('unknown step', step);
+    }
+  }
+
+  function showChapter(step) {
+    hideTextUi(); closeChat();
+    checkpoint = { label: S.label, idx: S.idx - 1, vars: JSON.parse(JSON.stringify(S.vars)), presentAt: JSON.parse(JSON.stringify(S.presentAt)), scene: { bg: S.scene.bg, place: S.scene.place } };
+    writeSave(checkpoint);
+    $('chEyebrow').textContent = step.title;
+    $('chTitle').textContent = step.sub;
+    $('chapter').hidden = false;
+    announce(step.title + ' ' + step.sub);
+    mode = 'chapter';
+  }
+
+  function sayLine(step) {
+    const who = step.say;
+    const text = fill(step.text);
+    $('choices').hidden = true;
+    $('box').hidden = false;
+    const tag = $('nameTag');
+    tag.textContent = speakerName(who);
+    tag.className = who === 'me' ? 'me' : '';
+    if (step.fx && who === 'k') spriteFx(step.fx);
+    const shown = who === 'think' ? '(' + text + ')' : text;
+    log.push({ who: speakerName(who), text: shown });
+    announce((speakerName(who) ? speakerName(who) + ': ' : '') + shown);
+    typeInto($('line'), shown, who === 'think' ? 'think' : '', null);
+    mode = 'say';
+  }
+
+  function openNvl(lines) {
+    hideTextUi();
+    nvlQueue = lines.map(fill);
+    $('nvlBody').innerHTML = '';
+    $('nvl').hidden = false;
+    mode = 'nvl';
+    nextNvl();
+  }
+  function nextNvl() {
+    const t = nvlQueue.shift();
+    $('nvlBody').querySelectorAll('.caret').forEach((c) => c.remove());
+    const p = document.createElement('p');
+    if (/^[「㐀-鿿]/.test(t)) p.className = 'zhline';
+    $('nvlBody').appendChild(p);
+    log.push({ who: '', text: t });
+    announce(t);
+    typeInto(p, t, '', null);
+  }
+
+  function openChat(title) {
+    hideTextUi();
+    $('chatHead').textContent = title;
+    $('chatBody').innerHTML = '';
+    $('chat').hidden = false;
+    $('chatHint').hidden = false;
+  }
+  function closeChat() { $('chat').hidden = true; $('chatHint').hidden = true; }
+  function addMsg(m) {
+    hideTextUi();
+    const me = m.from === 'me';
+    const d = document.createElement('div');
+    d.className = 'msg' + (me ? ' me' : '') + (m.sys ? ' sys' : '');
+    const text = fill(m.text);
+    d.innerHTML = (me ? '' : '<span class="who">' + esc(m.from) + '</span>') + '<span class="bubble">' + esc(text) + '</span>';
+    const body = $('chatBody');
+    body.appendChild(d);
+    while (body.children.length > 7) body.removeChild(body.firstChild);
+    const who = me ? S.vars.name : m.from;
+    log.push({ who, text });
+    announce(who + ': ' + text);
+    mode = 'msg';
+  }
+
+  function showChoices(list) {
+    const c = $('choices');
+    c.innerHTML = '';
+    list.forEach((opt) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = fill(opt.text);
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        log.push({ who: S.vars.name, text: fill(opt.text) });
+        if (opt.add) for (const k in opt.add) S.vars[k] = (S.vars[k] || 0) + opt.add[k];
+        c.hidden = true;
+        goto(opt.go);
+        run();
+      });
+      c.appendChild(b);
+    });
+    c.hidden = false;
+    mode = 'choice';
+    const first = c.querySelector('button'); if (first) first.focus({ preventScroll: true });
+  }
+
+  function cardHtml(id, extra) {
+    const c = CARDS[id];
+    return '<div class="col"><span class="ref">หลุนอวี่ ' + c.ref + '</span><span class="th">' + esc(c.th) + '</span>' + (extra || '') + '<span class="key">' + esc(c.key) + '</span></div><span class="vz">' + esc(c.zh) + '</span>';
+  }
+  function gainCard(id) {
+    hideTextUi();
+    if (!S.vars.cards.includes(id)) S.vars.cards.push(id);
+    $('gainCard').innerHTML = '<div class="tcard">' + cardHtml(id) + '</div>';
+    $('gain').hidden = false;
+    mode = 'overlay';
+    announce('ได้รับคำสอนใหม่ หลุนอวี่ ' + CARDS[id].ref);
+    $('gainOk').focus({ preventScroll: true });
+  }
+  $('gainOk').addEventListener('click', (e) => { e.stopPropagation(); $('gain').hidden = true; run(); });
+
+  let presentStep = null, picked = null;
+  function openPresent(step) {
+    hideTextUi(); closeChat();
+    presentStep = step; picked = null;
+    $('presentChip').textContent = 'ปัญหา: ' + CASES[step.present];
+    $('presentText').textContent = fill(step.prompt);
+    const wrap = $('presentCards');
+    wrap.innerHTML = '';
+    CARD_ORDER.filter((id) => S.vars.cards.includes(id)).forEach((id) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tcard';
+      b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = cardHtml(id);
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        picked = id;
+        wrap.querySelectorAll('.tcard').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        $('presentGo').disabled = false;
+      });
+      wrap.appendChild(b);
+    });
+    $('presentGo').disabled = true;
+    $('present').hidden = false;
+    mode = 'overlay';
+    announce('เปิดสมุดคำสอน เลือกคำสอนที่จะใช้');
+  }
+  $('presentGo').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!picked) return;
+    const st = presentStep, id = picked;
+    const tries = S.vars.tries[st.present] = (S.vars.tries[st.present] || 0) + 1;
+    if (id === st.good) { S.vars.solved[st.present] = id; if (tries === 1) S.vars.score += 1; }
+    log.push({ who: S.vars.name, text: 'ใช้คำสอน หลุนอวี่ ' + CARDS[id].ref });
+    $('present').hidden = true;
+    goto(st.outcomes[id] || st.other);
+    run();
+  });
+
+  function openExplain(ex) {
+    hideTextUi(); closeChat();
+    const v = $('exVerdict');
+    v.textContent = ex.kind === 'good' ? 'ได้ผลดี' : ex.kind === 'half' ? 'ได้ครึ่งเดียว' : 'ใช้ผิดที่';
+    v.className = 'verdict v-' + ex.kind;
+    $('exTitle').textContent = ex.title;
+    const c = CARDS[ex.card];
+    $('exUsed').innerHTML = 'คำสอนที่ใช้ · หลุนอวี่ ' + c.ref + ' <span class="zh">' + esc(c.zh) + '</span>';
+    $('exBody').innerHTML = ex.body.map((t) => '<li>' + esc(t).replace(/([㐀-鿿]+)/g, '<span class="zh">$1</span>') + '</li>').join('');
+    $('exGo').textContent = ex.kind === 'good' ? 'ไปต่อ' : 'กลับไปเลือกคำสอนใหม่';
+    $('explain').hidden = false;
+    mode = 'overlay';
+    announce(v.textContent + ' ' + ex.title);
+    $('exGo').focus({ preventScroll: true });
+  }
+  $('exGo').addEventListener('click', (e) => { e.stopPropagation(); $('explain').hidden = true; run(); });
+
+  function showEnding() {
+    hideTextUi();
+    $('nvl').hidden = true;
+    writeSave(null); checkpoint = null;
+    $('place').hidden = true;
+    const v = S.vars;
+    $('endRel').textContent = v.kname === 'จ้งหนี'
+      ? 'เธออนุญาตให้คุณเรียกเธอว่า “จ้งหนี” ชื่อที่คนเสมอกันใช้เรียก'
+      : 'คุณยังเรียกเธอว่า “ท่านอาจารย์” ลองเล่นใหม่ แล้วเลือกคำตอบที่เข้าใจเธอมากขึ้น';
+    $('endRows').innerHTML = Object.keys(CASES).map((k, i) => {
+      const id = v.solved[k];
+      const c = id ? CARDS[id] : null;
+      const tries = v.tries[k] || 0;
+      return '<div><span class="muted">ปัญหาที่ ' + (i + 1) + ' · ' + esc(CASES[k]) + '</span>' +
+        (c ? '<span class="zh">' + esc(c.zh) + '</span><span>หลุนอวี่ ' + c.ref + ' · ' + esc(c.key) + '</span>' : '<span>ยังไม่ได้แก้</span>') +
+        '<span class="muted">เลือก ' + tries + ' ครั้ง</span></div>';
+    }).join('');
+    const first = Object.keys(CASES).filter((k) => v.tries[k] === 1 && v.solved[k]).length;
+    $('endScore').textContent = 'เลือกคำสอนถูกตั้งแต่ครั้งแรก ' + first + ' จาก 3 ปัญหา';
+    $('ending').hidden = false;
+    mode = 'end';
+    $('endAgain').focus({ preventScroll: true });
+  }
+  $('endAgain').addEventListener('click', (e) => { e.stopPropagation(); $('ending').hidden = true; showTitle(); });
+  $('endBook').addEventListener('click', (e) => { e.stopPropagation(); openBook(); });
+
+  /* ---------- book + log ---------- */
+  function openBook() {
+    const v = S ? S.vars : { cards: [], solved: {} };
+    $('bookList').innerHTML = CARD_ORDER.map((id) => {
+      if (!v.cards.includes(id)) return '<div class="locked">ยังไม่ได้เรียนข้อนี้</div>';
+      const c = CARDS[id];
+      const cases = Object.keys(v.solved).filter((k) => v.solved[k] === id).map((k) => CASES[k]);
+      const extra = '<span class="ref">ได้ยินเมื่อ ' + esc(c.heard) + '</span>' + (cases.length ? '<span class="applied">ใช้ได้ผลกับ: ' + esc(cases.join(', ')) + '</span>' : '');
+      return '<div class="tcard">' + cardHtml(id, extra) + '</div>';
+    }).join('');
+    $('book').hidden = false;
+    $('book').querySelector('.close-x').focus({ preventScroll: true });
+  }
+  function openLog() {
+    $('logList').innerHTML = log.slice(-80).map((l) => '<p>' + (l.who ? '<b>' + esc(l.who) + '</b>' : '') + esc(l.text).replace(/([㐀-鿿]+)/g, '<span class="zh">$1</span>') + '</p>').join('') || '<p>ยังไม่มีบทสนทนา</p>';
+    $('log').hidden = false;
+    const list = $('logList'); list.scrollTop = list.scrollHeight;
+    $('log').querySelector('.close-x').focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); $(b.dataset.close).hidden = true; }));
+  document.querySelectorAll('.quick button').forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const a = b.dataset.act;
+    if (a === 'log') openLog();
+    else if (a === 'book') openBook();
+    else if (a === 'home') showTitle();
+  }));
+
+  /* ---------- advancing ---------- */
+  function advance() {
+    if (!$('book').hidden || !$('log').hidden || !$('howto').hidden) return;
+    if (mode === 'say') { if (typing) { typing.finish(); return; } run(); return; }
+    if (mode === 'nvl') {
+      if (typing) { typing.finish(); return; }
+      if (nvlQueue.length) { nextNvl(); return; }
+      $('nvl').hidden = true; run(); return;
+    }
+    if (mode === 'chapter') { $('chapter').hidden = true; run(); return; }
+    if (mode === 'msg') { run(); }
+  }
+  stage.addEventListener('click', (e) => {
+    if (e.target.closest('button, input, form, .overlay')) return;
+    advance();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { $('book').hidden = true; $('log').hidden = true; $('howto').hidden = true; return; }
+    if (e.key !== ' ' && e.key !== 'Enter') return;
+    const t = e.target;
+    if (t && t.closest && t.closest('button, input, textarea')) return;
+    if (!['say', 'nvl', 'chapter', 'msg'].includes(mode)) return;
+    e.preventDefault();
+    advance();
+  });
+
+  /* ---------- title + start ---------- */
+  function resetView() {
+    ['box', 'choices', 'nvl', 'chapter', 'gain', 'present', 'explain', 'book', 'log', 'ending', 'nameDlg', 'howto'].forEach((id) => { $(id).hidden = true; });
+    closeChat();
+    const sp = $('sprite'); sp.className = 'off'; sp.hidden = true;
+    typing = null;
+  }
+  function showTitle() {
+    resetView();
+    mode = 'title';
+    $('tCont').disabled = !readSave();
+    $('title').hidden = false;
+  }
+  function newVars(name) { return { name, score: 0, cards: [], tries: {}, solved: {}, kname: 'ท่านอาจารย์' }; }
+  function begin(fromSave) {
+    resetView();
+    $('title').hidden = true;
+    log.length = 0;
+    if (fromSave) {
+      S = { label: fromSave.label, idx: fromSave.idx, vars: fromSave.vars, presentAt: fromSave.presentAt || {}, scene: { bg: null, place: null, sprite: false } };
+      if (fromSave.scene && fromSave.scene.bg) setBg(fromSave.scene.bg, fromSave.scene.place, true);
+      else setBg('black', null, true);
+    } else {
+      const name = ($('nameInput').value || '').trim() || 'ภูมิ';
+      S = { label: 'start', idx: 0, vars: newVars(name), presentAt: {}, scene: { bg: null, place: null, sprite: false } };
+      setBg('black', null, true);
+    }
+    run();
+  }
+  $('tNew').addEventListener('click', (e) => { e.stopPropagation(); $('nameDlg').hidden = false; $('nameInput').focus({ preventScroll: true }); $('nameInput').select(); });
+  $('tCont').addEventListener('click', (e) => { e.stopPropagation(); const s = readSave(); if (s) begin(s); });
+  $('tHow').addEventListener('click', (e) => { e.stopPropagation(); $('howto').hidden = false; $('howto').querySelector('button').focus({ preventScroll: true }); });
+  $('nameBack').addEventListener('click', (e) => { e.stopPropagation(); $('nameDlg').hidden = true; });
+  $('nameForm').addEventListener('submit', (e) => { e.preventDefault(); begin(null); });
+
+  function start(data) {
+    if (data && data.save) writeSave(data.save);
+    fit();
+    showTitle();
+  }
+  if (window.claude && window.claude.hot) {
+    try { window.claude.hot.snapshot(() => ({ save: checkpoint || readSave() })); } catch (e) { /* optional */ }
+  }
+  if (window.claude && window.claude.hot && window.claude.hot.ready) window.claude.hot.ready(start);
+  else start((window.claude && window.claude.hot && window.claude.hot.data) || {});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+</script>
+
+</body></html>
