@@ -6,6 +6,10 @@
 
 **เล่นได้ที่:** https://jitwang12-maker.github.io/PD/
 
+สแกนเพื่อเล่นบนมือถือ: `qr-code.png` (QR อย่างเดียว) หรือ `qr-card.png` (การ์ดพร้อมชื่อเกม สำหรับโพสต์หรือพิมพ์)
+
+<img src="qr-code.png" alt="QR Code ไปยังหน้าเล่นเกม" width="200">
+
 ## ไฟล์
 
 - `index.html` ตัวเกมทั้งหมด (HTML, CSS, JavaScript ในไฟล์เดียว)
