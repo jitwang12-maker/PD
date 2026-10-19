@@ -146,7 +146,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--sky); outli
 .tcard .ref { font-family: var(--font-real); font-size: 13px; color: #6B5232; }
 .tcard .th { font-family: var(--font-dream); font-size: 18px; line-height: 1.6; }
 .tcard .key { margin-top: auto; font-family: var(--font-real); font-size: 13px; color: var(--jade); font-weight: 600; }
-.tcard .vz { flex: none; writing-mode: vertical-rl; font-family: var(--font-zh); font-size: 22px; letter-spacing: 3px; color: var(--seal); line-height: 1.25; }
+.tcard .vz { flex: none; writing-mode: vertical-rl; font-family: var(--font-zh); font-size: 22px; letter-spacing: 3px; color: var(--seal); line-height: 1.25; max-height: 320px; }
 button.tcard { cursor: pointer; }
 button.tcard[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--seal); }
 button.tcard[aria-pressed="true"]::after { content: "เลือก"; position: absolute; right: -10px; top: -24px; background: var(--seal); color: #F7F0E4; font-family: var(--font-dream); font-size: 14px; font-weight: 600; padding: 2px 10px; border: 2px solid var(--paper); outline: 2px solid var(--seal); }
@@ -187,8 +187,9 @@ button.tcard[aria-pressed="true"]::after { content: "เลือก"; position:
 /* book + log + ending + title */
 #book { flex-direction: column; justify-content: flex-start; padding: 28px 40px; box-sizing: border-box; gap: 16px; }
 #book h2, #log h2 { margin: 0; font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--ink); align-self: flex-start; }
-#bookList { width: 100%; flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 12px 6px 6px; box-sizing: border-box; align-content: start; }
+#bookList { width: 100%; flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 12px 6px 6px; box-sizing: border-box; align-content: start; grid-auto-rows: max-content; }
 #bookList .tcard { min-height: 210px; }
+#bookList .tcard .vz { max-height: 240px; }
 #bookList .locked { display: flex; align-items: center; justify-content: center; min-height: 210px; border: 1px dashed var(--bronze); color: #6B5A44; font-family: var(--font-real); font-size: 15px; }
 .applied { font-family: var(--font-real); font-size: 13px; color: var(--navy); background: rgba(143, 179, 217, .3); padding: 3px 10px; border-radius: 999px; align-self: flex-start; }
 #log { flex-direction: column; justify-content: flex-start; padding: 28px 40px; box-sizing: border-box; gap: 12px; }
@@ -200,6 +201,7 @@ button.tcard[aria-pressed="true"]::after { content: "เลือก"; position:
 #ending h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 46px; line-height: 1.35; }
 #ending .zhtitle { font-family: var(--font-zh); font-size: 24px; letter-spacing: 4px; color: var(--apricot); }
 #ending .rel { font-family: var(--font-dream); font-size: 21px; text-align: center; max-width: 820px; }
+#endPath { margin: 0; font-family: var(--font-dream); font-size: 18px; color: var(--apricot); text-align: center; }
 #endRows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 1000px; }
 #endRows div { border: 1px solid rgba(237, 230, 214, .25); padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
 #endRows .zh { color: var(--apricot); font-size: 19px; }
@@ -294,6 +296,7 @@ button.tcard[aria-pressed="true"]::after { content: "เลือก"; position:
         <h2>หลับตาครั้งนั้น คนึงฝันถึงขงจื้อ</h2>
         <div class="zhtitle">那一次闔眼，魂牽夢縈的是孔子</div>
         <p class="rel" id="endRel"></p>
+        <p id="endPath"></p>
         <div id="endRows"></div>
         <p class="note" id="endScore"></p>
         <div class="row">
@@ -323,7 +326,7 @@ button.tcard[aria-pressed="true"]::after { content: "เลือก"; position:
             <li>ในฝัน ท่านอาจารย์จะสอนหลักคิดจากคัมภีร์หลุนอวี่ แต่ละข้อจะถูกเก็บลงสมุดคำสอน</li>
             <li>ตื่นมาในโลกจริง คุณต้องเลือกคำสอนจากสมุดไปแก้ปัญหา ผลมีสามแบบ ได้ผลดี ได้ครึ่งเดียว และใช้ผิดที่</li>
             <li>ถ้ายังไม่ใช่ จะมีคำอธิบายว่าทำไม แล้วเลือกใหม่ได้</li>
-            <li>เดโมนี้มี 3 ปัญหา ใช้เวลาราว 15 นาที</li>
+            <li>เดโมนี้มี 3 ปัญหา กับบทที่ 1 ตอนออกจากแคว้นหลู่ ใช้เวลาราว 20 นาที</li>
           </ul>
           <div class="row-end"><button type="button" class="btn btn-seal" data-close="howto">เข้าใจแล้ว</button></div>
         </div>
@@ -350,7 +353,7 @@ button.tcard[aria-pressed="true"]::after { content: "เลือก"; position:
           <button type="button" id="tHow">วิธีเล่น</button>
         </nav>
         <img src="confucius.webp" alt="ภาพตัวละครขงจื้อ">
-        <div class="ver">เดโม 0.1</div>
+        <div class="ver">เดโม 0.2</div>
       </div>
 
       <div id="fade"></div>
@@ -366,10 +369,11 @@ const CARDS = {
   A: { ref: '1.1', zh: '學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？', th: 'เรียนแล้วหมั่นฝึกใช้ มิใช่เรื่องน่ายินดีหรือ มีสหายมาแต่แดนไกล มิใช่เรื่องน่าสุขใจหรือ', key: 'การเรียนจะสมบูรณ์ เมื่อได้นำไปใช้', heard: 'บทนำ · ใต้ต้นซิ่ง' },
   D: { ref: '2.17', zh: '知之為知之，不知為不知，是知也。', th: 'รู้ก็ว่ารู้ ไม่รู้ก็ว่าไม่รู้ นี่แหละคือความรู้', key: 'ซื่อตรงต่อสิ่งที่ตนรู้และไม่รู้', heard: 'บทนำ · เรื่องของจื่อลู่' },
   B: { ref: '15.24', zh: '其恕乎！己所不欲，勿施於人。', th: 'คงเป็นคำว่า “ซู่” สิ่งใดที่ตนไม่ปรารถนา อย่าทำแก่ผู้อื่น', key: 'ลองยืนในที่ของผู้อื่น', heard: 'ปัญหาที่ 1 · ยามเย็นในสำนัก' },
-  E: { ref: '15.28', zh: '眾惡之，必察焉；眾好之，必察焉。', th: 'เมื่อคนทั้งหลายเกลียดใคร ต้องพิจารณาให้ถ้วน เมื่อคนทั้งหลายรักใคร ก็ต้องพิจารณาให้ถ้วน', key: 'เสียงของคนหมู่มากไม่ใช่หลักฐาน', heard: 'ปัญหาที่ 2 · กลางทางสู่แคว้นเว่ย' },
-  F: { ref: '4.18', zh: '事父母幾諫，見志不從，又敬不違，勞而不怨。', th: 'ปรนนิบัติพ่อแม่ ทักท้วงอย่างนุ่มนวล เห็นว่าท่านยังไม่รับ ก็ยังคงเคารพ ไม่ขัดแข็ง เหนื่อยก็ไม่ขุ่นเคือง', key: 'เห็นต่างได้ แต่รักษาความเคารพ', heard: 'ปัญหาที่ 3 · ริมแม่น้ำยามค่ำ' }
+  E: { ref: '15.28', zh: '眾惡之，必察焉；眾好之，必察焉。', th: 'เมื่อคนทั้งหลายเกลียดใคร ต้องพิจารณาให้ถ้วน เมื่อคนทั้งหลายรักใคร ก็ต้องพิจารณาให้ถ้วน', key: 'เสียงของคนหมู่มากไม่ใช่หลักฐาน', heard: 'ปัญหาที่ 2 · ทางนอกเมืองชวีฟู่' },
+  F: { ref: '4.18', zh: '事父母幾諫，見志不從，又敬不違，勞而不怨。', th: 'ปรนนิบัติพ่อแม่ ทักท้วงอย่างนุ่มนวล เห็นว่าท่านยังไม่รับ ก็ยังคงเคารพ ไม่ขัดแข็ง เหนื่อยก็ไม่ขุ่นเคือง', key: 'เห็นต่างได้ แต่รักษาความเคารพ', heard: 'ปัญหาที่ 3 · ริมแม่น้ำยามค่ำ' },
+  G: { ref: '4.14', zh: '不患無位，患所以立；不患莫己知，求為可知也。', th: 'อย่าทุกข์ที่ไม่มีตำแหน่ง จงทุกข์ว่าตนมีดีพอจะยืนในตำแหน่งหรือยัง อย่าทุกข์ที่ไม่มีใครรู้จัก จงทำตนให้ควรค่าแก่การรู้จัก', key: 'ทำตัวให้ควรค่า ก่อนเรียกร้องให้ใครเห็น', heard: 'บทที่ 1 · ประตูเมืองชวีฟู่' }
 };
-const CARD_ORDER = ['A', 'D', 'B', 'E', 'F'];
+const CARD_ORDER = ['A', 'D', 'B', 'E', 'F', 'G'];
 const CASES = { c1: 'งานกลุ่ม', c2: 'ข่าวลือในแชต', c3: 'คุยกับแม่เรื่องเส้นทาง' };
 
 const SCRIPT = {
@@ -393,7 +397,7 @@ const SCRIPT = {
     { say: 'n', text: 'คนตรงหน้าไม่ใช่อาจารย์ในคาบ หญิงสาวผมยาวในชุดคลุมแขนกว้าง ยืนมองผมอยู่ใต้ต้นไม้ ที่ดอกสีชมพูอ่อนบานเต็มกิ่ง' },
     { say: 'k', fx: 'think', text: 'เจ้าไม่ใช่ไจ่หว่อ ศิษย์ขี้เซาของข้านี่นา เสื้อผ้าก็แปลก สำเนียงก็แปลก เจ้ามาจากแคว้นใด' },
     { choice: [
-      { text: 'ผมมาจากประเทศไทยครับ อีกสองพันกว่าปีข้างหน้า', add: { score: 1 }, go: 'p_honest' },
+      { text: 'ผมมาจากประเทศไทยครับ อีกสองพันกว่าปีข้างหน้า', add: { score: 1, honest: 1 }, go: 'p_honest' },
       { text: 'ที่นี่ที่ไหนครับ แล้วคุณเป็นใคร', go: 'p_ask' }
     ] }
   ],
@@ -550,14 +554,14 @@ const SCRIPT = {
     { say: 'n', text: 'อาจารย์ยังไม่เข้าห้อง ผมฟุบลงกับโต๊ะ' },
     { bg: 'road' },
     { show: true },
-    { say: 'k', text: 'วันนี้เราอยู่กลางทางสู่แคว้นเว่ย นั่งลงเถิด เท้าข้าก็ปวดเหมือนกัน' },
+    { say: 'k', text: 'วันนี้ข้าพาศิษย์ออกมาเดินนอกเมือง นั่งลงเถิด เท้าข้าก็ปวดเหมือนกัน' },
     { say: 'n', text: 'ผมเล่าเรื่องภาพแคปให้เธอฟัง และเรื่องที่ทุกคนเชื่อไปแล้ว ก่อนจะมีใครถามฝนสักคำ' },
     { say: 'k', fx: 'think', text: 'ภาพที่ส่งต่อกันได้ไกลในพริบตา… โลกของเจ้าช่างน่ากลัว' },
     { say: 'k', text: 'แต่สิ่งที่อยู่ในภาพนั้น ข้ารู้จักดี แคว้นไหนก็มีคนชอบเล่าเรื่องที่ตนไม่ได้เห็นเอง' },
     { say: 'k', text: '道聽而塗說，德之棄也 ได้ยินกลางทาง แล้วเล่าต่อกลางทาง คือการทิ้งคุณธรรม' },
-    { say: 'k', fx: 'sad', text: 'ข้าเองก็ถูกลือมานักต่อนัก บางคนว่าข้าอยากได้ตำแหน่งจนตัวสั่น บางคนว่าข้าเหมือนหมาไร้บ้าน' },
+    { say: 'k', fx: 'sad', text: 'ข้าเองก็ถูกลือมานักต่อนัก บางคนว่าข้าอยากได้ตำแหน่งจนตัวสั่น บางคนว่าข้ารู้ไปหมดทุกเรื่อง แต่ไม่เก่งสักเรื่อง' },
     { say: 'me', text: 'แล้วอาจารย์ทำยังไงครับ' },
-    { say: 'k', fx: 'happy', text: 'เรื่องหมาไร้บ้าน ข้ายอมรับว่าจริง ข้าไม่มีบ้านให้กลับจริง ๆ ฮ่า ๆ' },
+    { say: 'k', fx: 'happy', text: 'เรื่องหลัง ข้ายอมรับว่าจริง ข้าเลยคิดจะเอาดีทางขับรถศึกเสียเลย ฮ่า ๆ' },
     { say: 'k', text: 'ส่วนเรื่องอื่น ข้าห้ามปากใครไม่ได้ ข้าแค่สอนศิษย์ไม่ให้เชื่อตามกันง่าย ๆ' },
     { choice: [
       { text: 'แต่ถ้าทุกคนพูดตรงกัน ก็น่าจะมีมูลอยู่บ้างไม่ใช่เหรอครับ', go: 'c2_da' },
@@ -737,7 +741,7 @@ const SCRIPT = {
   ],
 
   end: [
-    { bg: 'courtyard', place: 'ใต้ต้นซิ่ง · ฝันคืนสุดท้ายของเดโม' },
+    { bg: 'courtyard', place: 'ใต้ต้นซิ่ง · สำนักในแคว้นหลู่' },
     { show: true },
     { say: 'k', text: 'สหายจากแดนไกล หลายคืนมานี้ เจ้าเล่าเรื่องโลกของเจ้าให้ข้าฟังไม่หยุด' },
     { say: 'k', text: 'งานกลุ่ม ภาพที่ส่งต่อกันได้ไกล และแม่ที่โทรมาทุกวันอาทิตย์' },
@@ -762,16 +766,137 @@ const SCRIPT = {
     { say: 'k', text: 'ปราชญ์ที่ข้านับถือที่สุด เมื่อก่อนข้าฝันเห็นท่านแทบทุกคืน แต่หลัง ๆ มานี้…' },
     { say: 'k', fx: 'shy', text: '…ช่างเถิด 子不語怪力亂神 ข้าไม่พูดเรื่องประหลาด' },
     { hide: true },
+    { jump: 'ch1' }
+  ],
+
+  ch1: [
+    { title: 'บทที่ 1', sub: 'เมืองที่ไม่ต้องการเรา' },
+    { bg: 'dusk' },
+    { nvl: [
+      'หลายคืนต่อมา ทุกครั้งที่หลับตา ผมกลับไปที่สำนักใต้ต้นซิ่ง',
+      'แต่เวลาของเธอไม่ได้รอผม บางคืนผ่านไปแค่วันเดียว บางคืนดอกซิ่งร่วงหมดต้นไปแล้ว',
+      'คืนนี้ สำนักเงียบผิดปกติ ไม่มีเสียงอ่านหนังสือ ไม่มีเสียงพิณ',
+      'มีแต่เสียงกลองกับเสียงดนตรี แว่วมาจากทางวังหลวง ดังมาสามวันแล้ว'
+    ] },
+    { say: 'zilu', text: 'เจ้าคนต่างแดน มาก็ดีแล้ว ช่วยข้าพูดกับท่านอาจารย์ที' },
+    { say: 'n', text: 'ชายร่างใหญ่คาดดาบยาว เดินวนอยู่หน้าห้องเรียน จื่อลู่ ศิษย์รุ่นพี่ที่ใจร้อนที่สุดในสำนัก' },
+    { say: 'zilu', text: 'แคว้นฉีส่งนางรำแปดสิบนาง กับม้างามอีกร้อยยี่สิบตัว มาถวายเจ้าหลู่ ขุนนางจี้หวนจื่อรับไว้ทั้งหมด' },
+    { say: 'zilu', text: 'ตั้งแต่นั้น เจ้าหลู่ก็ไม่ออกว่าราชการเลยสามวัน มัวแต่ดูนางรำ' },
+    { say: 'zilu', text: 'ข้าบอกท่านอาจารย์ว่า เราไปจากที่นี่กันเถิด แต่ท่านว่ายังก่อน' },
+    { show: true },
+    { say: 'k', text: 'จื่อลู่ เจ้าเสียงดังจนนกบนต้นซิ่งบินหนีหมดแล้ว' },
+    { say: 'k', fx: 'think', text: 'อีกไม่กี่วันจะมีพิธีบวงสรวงชานเมือง ถ้าเจ้าหลู่ยังส่งเนื้อบวงสรวงมาให้ขุนนางตามจารีต ก็แปลว่าท่านยังไม่ลืมเรา ข้าก็ยังอยู่ต่อได้' },
+    { say: 'zilu', text: 'เนื้อชิ้นเดียว ท่านจะรอไปทำไม' },
+    { say: 'k', text: 'ไปดูแลม้าเถิด จื่อลู่' },
+    { say: 'n', text: 'จื่อลู่ถอนหายใจเสียงดัง แล้วเดินกระแทกเท้าออกไป เหลือแต่ผมกับเธอใต้ต้นซิ่ง' },
+    { say: 'think', text: 'ผมรู้ว่าเรื่องนี้จบอย่างไร มันอยู่ในหนังสือที่อาจารย์สั่งอ่าน ปีนั้นขงจื้อออกจากแคว้นหลู่ แล้วไม่ได้กลับบ้านอีกสิบสี่ปี' },
+    { branch: 'ch1_ask' }
+  ],
+  ch1_ask_h: [
+    { say: 'k', text: 'คืนแรกที่เจอกัน เจ้าบอกข้าว่ามาจากอีกสองพันปีข้างหน้า วันนั้นข้าหัวเราะ' },
+    { say: 'k', fx: 'sad', text: 'แต่คืนนี้ ข้าอยากถามเจ้าจริง ๆ' },
+    { jump: 'ch1_q' }
+  ],
+  ch1_ask_n: [
+    { say: 'k', text: 'ศิษย์ของข้าลือกันว่า เจ้าเป็นวิญญาณ มาตอนเช้า แล้วหายไปตอนค่ำ' },
+    { say: 'k', fx: 'sad', text: 'ถ้าเป็นวิญญาณจริง ก็คงรู้เรื่องที่คนเป็นไม่รู้ คืนนี้ข้าอยากถามเจ้าสักข้อ' },
+    { jump: 'ch1_q' }
+  ],
+  ch1_q: [
+    { say: 'k', text: 'เจ้าว่า เนื้อบวงสรวงจะมาถึงข้าไหม' },
+    { choice: [
+      { text: 'ไม่มาครับ แล้วคุณจะต้องจากหลู่ไปอีกนานมาก', go: 'ch1_qa' },
+      { text: 'ผมไม่รู้หรอกครับ', go: 'ch1_qb' },
+      { text: 'ผมรู้ครับ แต่ผมว่าคุณเองก็รู้คำตอบอยู่แล้ว', add: { score: 1 }, go: 'ch1_qc' }
+    ] }
+  ],
+  ch1_qa: [
+    { say: 'k', fx: 'sad', text: '…อย่างนั้นหรือ' },
+    { say: 'k', text: 'เจ้าตอบตรงดี แต่บางเรื่อง ต่อให้รู้ก่อน ก็ไม่ได้เจ็บน้อยลงเลย' },
+    { jump: 'ch1_gate' }
+  ],
+  ch1_qb: [
+    { say: 'k', fx: 'think', text: 'รู้ก็ว่ารู้ ไม่รู้ก็ว่าไม่รู้ ข้าเพิ่งสอนเจ้าในคืนแรกเองนะ' },
+    { say: 'k', fx: 'happy', text: 'แต่ตาเจ้าบอกข้าหมดแล้ว ช่างเถิด เจ้าคงไม่อยากให้ข้าเสียใจ' },
+    { jump: 'ch1_gate' }
+  ],
+  ch1_qc: [
+    { say: 'k', fx: 'sad', text: '…นั่นสินะ ข้ารู้มาตั้งแต่วันที่จี้หวนจื่อรับนางรำไว้แล้ว' },
+    { say: 'k', text: 'ข้าแค่อยากให้ใครสักคนพูดออกมา ข้าจะได้เลิกหลอกตัวเอง ขอบใจนะ' },
+    { jump: 'ch1_gate' }
+  ],
+  ch1_gate: [
+    { hide: true },
+    { bg: 'gate' },
+    { nvl: [
+      'คืนถัดมา ผมหลับตา แล้วลืมตาขึ้นกลางหมอกยามรุ่งสาง',
+      'เกวียนสองสามเล่มจอดอยู่หน้าประตูเมือง ศิษย์ขนม้วนซีกไม้ไผ่ขึ้นเกวียนกันเงียบ ๆ',
+      'พิธีบวงสรวงผ่านไปเมื่อวาน และเนื้อบวงสรวงไม่ได้มาถึงเธอ'
+    ] },
+    { show: true },
+    { say: 'k', text: 'มาทันพอดี สหายจากแดนไกล' },
+    { say: 'n', text: 'เธอยังสวมหมวกพิธีอยู่ เหมือนกลับจากงานบวงสรวงแล้วออกเดินทางทันที โดยไม่ทันถอด' },
+    { choice: [
+      { text: 'คุณจะไปจริง ๆ เหรอครับ แค่เพราะเนื้อชิ้นเดียว', go: 'ch1_ma' },
+      { text: 'ที่ไปไม่ใช่เพราะเนื้อ ใช่ไหมครับ', add: { score: 1 }, go: 'ch1_mb' }
+    ] }
+  ],
+  ch1_ma: [
+    { say: 'k', fx: 'happy', text: 'ฮ่า ๆ คนทั้งเมืองก็คงคิดอย่างเจ้า ว่าข้างอนเพราะไม่ได้เนื้อ' },
+    { say: 'k', text: 'เนื้อชิ้นนั้นคือจารีต เจ้าบ้านเมืองที่ลืมจารีตต่อคนที่ทำงานให้ ก็คือบอกอย่างสุภาพว่า ไม่ต้องการคนคนนั้นแล้ว' },
+    { jump: 'ch1_teach' }
+  ],
+  ch1_mb: [
+    { say: 'k', fx: 'think', text: 'เจ้าเข้าใจเร็วกว่าคนทั้งเมืองเสียอีก' },
+    { say: 'k', text: 'เนื้อชิ้นนั้นคือจารีต เจ้าบ้านเมืองที่ลืมจารีตต่อคนที่ทำงานให้ ก็คือบอกอย่างสุภาพว่า ไม่ต้องการคนคนนั้นแล้ว' },
+    { jump: 'ch1_teach' }
+  ],
+  ch1_teach: [
+    { say: 'me', text: 'คุณทำงานให้หลู่มาตั้งนาน สุดท้ายไม่มีใครเห็นค่า ไม่เสียใจเหรอครับ' },
+    { say: 'k', fx: 'sad', text: 'เสียใจสิ ข้าก็คนเหมือนกัน' },
+    { say: 'k', text: '不患無位，患所以立；不患莫己知，求為可知也' },
+    { say: 'k', text: 'อย่าทุกข์ที่ไม่มีตำแหน่ง จงทุกข์ว่าตนมีดีพอจะยืนในตำแหน่งหรือยัง อย่าทุกข์ที่ไม่มีใครรู้จัก จงทำตนให้ควรค่าแก่การรู้จัก' },
+    { card: 'G' },
+    { say: 'k', fx: 'happy', text: 'ข้าสอนศิษย์ไว้อย่างนี้ ถึงคราวข้าเอง ก็ต้องทำให้ได้ ไม่อย่างนั้นจะไปสอนใครได้' },
+    { say: 'n', text: 'ศิษย์คนหนึ่งร้องเรียกจากหัวขบวน เกวียนเริ่มเคลื่อน เธอหันกลับไปมองกำแพงเมืองอีกครั้ง' },
+    { say: 'k', text: '遲遲吾行也 ข้าจะเดินช้า ๆ' },
+    { say: 'k', fx: 'sad', text: 'ที่นี่คือบ้านเกิดของข้า คนเราไม่ควรรีบร้อนจากบ้านเกิด ต่อให้บ้านไม่ต้องการเราแล้วก็ตาม' },
+    { say: 'k', text: 'แล้วเจ้าเล่า สหายจากแดนไกล' },
+    { choice: [
+      { text: 'ผมจะไปด้วยครับ ไม่ว่าคุณจะไปที่ไหน', add: { score: 1, followed: 1 }, go: 'ch1_fa' },
+      { text: 'ผมคงส่งคุณได้แค่ตรงนี้ครับ ผมไม่รู้ว่าคืนต่อไปจะฝันถึงที่ไหน', go: 'ch1_fb' }
+    ] }
+  ],
+  ch1_fa: [
+    { say: 'k', fx: 'shy', text: 'เจ้าก็ตามข้ามาทุกคืนอยู่แล้วนี่ ไม่ต้องสัญญาก็ได้' },
+    { say: 'k', fx: 'happy', text: '…แต่ข้าดีใจที่ได้ยินเจ้าพูด' },
+    { jump: 'ch1_wake' }
+  ],
+  ch1_fb: [
+    { say: 'k', text: 'จริงสินะ เจ้าเป็นแขกยามกลางวันของข้า มาโดยไม่บอก แล้วก็ไปโดยไม่ลา' },
+    { say: 'k', fx: 'happy', text: 'ไม่เป็นไร ทางข้างหน้ายาวนัก หลับเมื่อไร ก็มาหาข้าตามทางเถิด' },
+    { jump: 'ch1_wake' }
+  ],
+  ch1_wake: [
+    { say: 'n', text: 'เธอก้าวขึ้นเกวียน ขบวนเล็ก ๆ ค่อย ๆ เคลื่อนออกจากประตูเมือง ช้าจนเหมือนไม่อยากไป' },
+    { say: 'n', text: 'ผมเดินตามไปได้ไม่กี่ก้าว เสียงนาฬิกาปลุกก็ดังแทรกเข้ามา แล้วหมอกก็กลืนทุกอย่างเป็นสีขาว' },
+    { hide: true },
+    { bg: 'room_morning', place: 'หอพัก · เช้า' },
     { nvl: [
       'ผมตื่นขึ้นตอนเช้า แสงแดดลอดผ้าม่านเข้ามา',
       'ไม่มีอะไรติดมือมาจากความฝันเลย นอกจากสิ่งที่ผมจำได้',
-      'และบางที นั่นอาจเป็นสิ่งเดียวที่สำคัญ'
+      'ผมเปิดหนังสือที่อาจารย์สั่งอ่าน เรื่องเมื่อคืนถูกบันทึกไว้ในประโยคเดียว',
+      '「齊人歸女樂，季桓子受之，三日不朝，孔子行。」',
+      '“คนแคว้นฉีส่งนางรำมาถวาย จี้หวนจื่อรับไว้ สามวันไม่ออกว่าราชการ ขงจื้อจึงจากไป”',
+      'ในหนังสือ เธอจากไปในประโยคเดียว แต่ผมเห็นว่าเธอเดินช้าแค่ไหน',
+      'คืนนี้ ผมจะหลับตาอีกครั้ง'
     ] },
     { end: true }
   ]
 };
 const BRANCHES = {
-  closeness: (v) => (v.score >= 5 ? 'end_close' : 'end_normal')
+  closeness: (v) => (v.score >= 5 ? 'end_close' : 'end_normal'),
+  ch1_ask: (v) => (v.honest ? 'ch1_ask_h' : 'ch1_ask_n')
 };
 /*SCRIPT-END*/
 
@@ -781,8 +906,9 @@ const BGS = {
   room_morning: { world: 'real', place: 'หอพัก · เช้า', svg: '<rect width="1280" height="720" fill="#E9EEF4"/><rect x="900" y="90" width="270" height="220" fill="#FFF6DF" stroke="#23324A" stroke-width="6" opacity=".9"/><path d="M1035 90V310M900 200H1170" stroke="#23324A" stroke-width="5" opacity=".6"/><path d="M900 310L620 720L1100 720L1170 310Z" fill="#FFF6DF" opacity=".35"/><rect x="100" y="460" width="560" height="18" fill="#23324A" opacity=".25"/><rect x="0" y="560" width="1280" height="160" fill="#23324A" opacity=".06"/><path d="M560 460C560 400 600 380 610 340M580 460C590 410 640 400 660 370M570 460C550 420 520 410 500 390" fill="none" stroke="#5C8A78" stroke-width="6" stroke-linecap="round"/><rect x="545" y="430" width="50" height="32" fill="#8A6A3E" opacity=".7"/>' },
   courtyard: { world: 'dream', place: 'สำนักในแคว้นหลู่ · ราว 497 ปีก่อน ค.ศ.', svg: '<rect width="1280" height="720" fill="#E9DFCB"/><circle cx="1080" cy="150" r="90" fill="#B23A2B" opacity=".09"/><path d="M0 430C140 390 220 350 330 370C430 390 500 330 610 330C720 330 780 390 880 380C990 370 1060 320 1160 330C1220 336 1250 350 1280 360L1280 720L0 720Z" fill="#2A2420" opacity=".06"/><path d="M10 178C80 176 120 166 150 140L390 140C420 166 460 176 530 178L530 192L10 192Z" fill="#2A2420" opacity=".26"/><path d="M150 140L170 124L370 124L390 140Z" fill="#2A2420" opacity=".26"/><path d="M170 124C160 118 156 110 162 102M370 124C380 118 384 110 378 102" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".26"/><rect x="50" y="192" width="440" height="10" fill="#2A2420" opacity=".13"/><rect x="70" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="180" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="346" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="456" y="202" width="14" height="268" fill="#2A2420" opacity=".13"/><rect x="30" y="470" width="480" height="18" fill="#2A2420" opacity=".1"/><rect x="200" y="488" width="140" height="12" fill="#2A2420" opacity=".1"/><path d="M0 540L1280 520L1280 720L0 720Z" fill="#2A2420" opacity=".07"/><path d="M1150 520C1140 420 1150 330 1180 260" fill="none" stroke="#2A2420" stroke-width="12" stroke-linecap="round" opacity=".5"/><path d="M1170 300C1120 260 1080 250 1040 254" fill="none" stroke="#2A2420" stroke-width="5" stroke-linecap="round" opacity=".45"/><g fill="#E9C4B8"><circle cx="1040" cy="252" r="12"/><circle cx="1078" cy="250" r="10"/><circle cx="1112" cy="268" r="13"/><circle cx="1180" cy="258" r="14"/><circle cx="1200" cy="290" r="10"/><circle cx="1158" cy="236" r="9"/><ellipse cx="980" cy="400" rx="6" ry="4"/><ellipse cx="900" cy="470" rx="5" ry="3.5"/></g>' },
   dusk: { world: 'dream', place: 'สำนักในแคว้นหลู่ · ยามเย็น', svg: '<rect width="1280" height="720" fill="#E2CCAE"/><circle cx="980" cy="330" r="130" fill="#B23A2B" opacity=".16"/><path d="M0 430C140 390 220 350 330 370C430 390 500 330 610 330C720 330 780 390 880 380C990 370 1060 320 1160 330C1220 336 1250 350 1280 360L1280 720L0 720Z" fill="#2A2420" opacity=".1"/><path d="M10 178C80 176 120 166 150 140L390 140C420 166 460 176 530 178L530 192L10 192Z" fill="#2A2420" opacity=".34"/><path d="M150 140L170 124L370 124L390 140Z" fill="#2A2420" opacity=".34"/><path d="M170 124C160 118 156 110 162 102M370 124C380 118 384 110 378 102" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".34"/><rect x="50" y="192" width="440" height="10" fill="#2A2420" opacity=".18"/><rect x="70" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="180" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="346" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="456" y="202" width="14" height="268" fill="#2A2420" opacity=".18"/><rect x="30" y="470" width="480" height="18" fill="#2A2420" opacity=".14"/><rect x="200" y="488" width="140" height="12" fill="#2A2420" opacity=".14"/><path d="M0 540L1280 520L1280 720L0 720Z" fill="#2A2420" opacity=".12"/><path d="M1150 520C1140 420 1150 330 1180 260" fill="none" stroke="#2A2420" stroke-width="12" stroke-linecap="round" opacity=".6"/><g fill="#D9A797"><circle cx="1112" cy="268" r="13"/><circle cx="1180" cy="258" r="14"/><circle cx="1200" cy="290" r="10"/><circle cx="1158" cy="236" r="9"/></g>' },
-  road: { world: 'dream', place: 'ระหว่างทางสู่แคว้นเว่ย · ราว 496 ปีก่อน ค.ศ.', svg: '<rect width="1280" height="720" fill="#E6DECD"/><path d="M0 380C120 300 220 260 330 300C430 336 500 240 620 230C740 220 800 320 900 300C1010 280 1080 200 1180 220C1230 230 1260 250 1280 260L1280 720L0 720Z" fill="#2A2420" opacity=".07"/><path d="M0 470C160 420 260 400 380 430C500 460 560 390 690 400C820 410 900 470 1020 450C1140 430 1210 400 1280 410L1280 720L0 720Z" fill="#2A2420" opacity=".11"/><path d="M0 590C200 560 360 560 520 580C700 600 900 560 1280 570L1280 720L0 720Z" fill="#2A2420" opacity=".14"/><path d="M520 720C560 640 660 590 760 560C820 542 900 530 960 528L966 536C900 540 830 552 780 572C690 608 620 660 640 720Z" fill="#F3ECDD" opacity=".85"/><path d="M180 590V470M174 520L150 500M186 500L210 480" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/><path d="M1090 570V440M1084 490L1060 470M1096 470L1120 452" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/>' },
+  road: { world: 'dream', place: 'ทางนอกเมืองชวีฟู่ · แคว้นหลู่', svg: '<rect width="1280" height="720" fill="#E6DECD"/><path d="M0 380C120 300 220 260 330 300C430 336 500 240 620 230C740 220 800 320 900 300C1010 280 1080 200 1180 220C1230 230 1260 250 1280 260L1280 720L0 720Z" fill="#2A2420" opacity=".07"/><path d="M0 470C160 420 260 400 380 430C500 460 560 390 690 400C820 410 900 470 1020 450C1140 430 1210 400 1280 410L1280 720L0 720Z" fill="#2A2420" opacity=".11"/><path d="M0 590C200 560 360 560 520 580C700 600 900 560 1280 570L1280 720L0 720Z" fill="#2A2420" opacity=".14"/><path d="M520 720C560 640 660 590 760 560C820 542 900 530 960 528L966 536C900 540 830 552 780 572C690 608 620 660 640 720Z" fill="#F3ECDD" opacity=".85"/><path d="M180 590V470M174 520L150 500M186 500L210 480" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/><path d="M1090 570V440M1084 490L1060 470M1096 470L1120 452" stroke="#2A2420" stroke-width="5" stroke-linecap="round" fill="none" opacity=".45"/>' },
   river: { world: 'night', place: 'ริมแม่น้ำ · ยามค่ำ', svg: '<rect width="1280" height="720" fill="#1C2238"/><circle cx="1050" cy="130" r="50" fill="#EDE6D6" opacity=".85"/><path d="M0 380C160 330 300 320 440 350C580 380 700 320 860 320C1020 320 1120 360 1280 350L1280 720L0 720Z" fill="#EDE6D6" opacity=".05"/><path d="M0 450C300 430 600 470 900 450C1060 440 1180 440 1280 446L1280 560C1100 552 900 580 640 570C380 560 200 560 0 570Z" fill="#2E395B"/><path d="M120 480H360M520 500H760M880 470H1100M300 530H520M760 545H980" stroke="#EDE6D6" stroke-width="2" opacity=".18"/><path d="M1000 470H1100" stroke="#EDE6D6" stroke-width="3" opacity=".35"/><path d="M0 560C300 552 600 580 900 572C1060 568 1180 560 1280 562L1280 720L0 720Z" fill="#141A2C"/><path d="M90 620L80 520M110 620L118 530M130 620L126 540M1180 610L1170 500M1200 610L1210 515" stroke="#3A4766" stroke-width="4" stroke-linecap="round"/>' },
+  gate: { world: 'dream', place: 'ประตูเมืองชวีฟู่ · รุ่งสาง', svg: '<rect width="1280" height="720" fill="#ECE4D3"/><circle cx="1040" cy="240" r="84" fill="#B23A2B" opacity=".1"/><path d="M0 400C150 360 260 340 380 360C500 380 600 330 720 330C860 330 960 380 1100 370C1180 364 1240 350 1280 345L1280 720L0 720Z" fill="#2A2420" opacity=".05"/><path d="M0 332H8V314H34V332H60V314H86V332H112V314H138V332H164V314H190V332H216V314H242V332H268V314H294V332H320V314H346V332H372V314H398V332H424V314H450V332H476V314H502V332H528V314H554V332H580V314H606V332H632V314H658V332H684V314H710V332H736V314H762V332H780V530H0Z" fill="#2A2420" opacity=".14"/><rect x="262" y="262" width="196" height="70" fill="#2A2420" opacity=".16"/><path d="M230 250C270 248 290 240 305 222L415 222C430 240 450 248 490 250L490 262L230 262Z" fill="#2A2420" opacity=".28"/><path d="M305 222C296 216 292 208 298 200M415 222C424 216 428 208 422 200" fill="none" stroke="#2A2420" stroke-width="4" stroke-linecap="round" opacity=".28"/><path d="M300 530V420C300 390 330 372 360 372C390 372 420 390 420 420V530Z" fill="#2A2420" opacity=".32"/><path d="M0 530L1280 515L1280 720L0 720Z" fill="#2A2420" opacity=".08"/><path d="M330 530C420 590 600 640 900 720L1180 720C860 650 560 590 420 530Z" fill="#F3ECDD" opacity=".85"/><g fill="none" stroke="#2A2420" stroke-width="5" stroke-linecap="round" opacity=".35"><circle cx="560" cy="566" r="24"/><path d="M516 548H646M528 526H636V548M646 548L700 560"/></g><path d="M1120 560C1110 470 1120 400 1150 330" fill="none" stroke="#2A2420" stroke-width="12" stroke-linecap="round" opacity=".45"/><path d="M1150 334C1104 364 1084 420 1082 500M1150 334C1124 380 1116 440 1120 520M1150 334C1170 380 1176 430 1172 500M1150 334C1196 360 1214 410 1220 470" fill="none" stroke="#5C8A78" stroke-width="3" stroke-linecap="round" opacity=".55"/><path d="M0 470C200 455 400 480 640 468C880 456 1060 470 1280 462L1280 500C1060 508 860 494 640 506C400 518 200 496 0 506Z" fill="#F7F2E8" opacity=".7"/>' },
   black: { world: 'dream', place: '', svg: '<rect width="1280" height="720" fill="#15120F"/>' }
 };
 
@@ -888,6 +1014,7 @@ const BGS = {
     if (who === 'k') return S.vars.kname;
     if (who === 'me') return S.vars.name;
     if (who === 'mom') return 'แม่';
+    if (who === 'zilu') return 'จื่อลู่';
     return '';
   }
   function hideTextUi() { $('box').hidden = true; $('choices').hidden = true; }
@@ -1098,6 +1225,9 @@ const BGS = {
     $('endRel').textContent = v.kname === 'จ้งหนี'
       ? 'เธออนุญาตให้คุณเรียกเธอว่า “จ้งหนี” ชื่อที่คนเสมอกันใช้เรียก'
       : 'คุณยังเรียกเธอว่า “ท่านอาจารย์” ลองเล่นใหม่ แล้วเลือกคำตอบที่เข้าใจเธอมากขึ้น';
+    $('endPath').textContent = v.followed
+      ? 'ที่ประตูเมืองชวีฟู่ คุณบอกเธอว่าจะตามไปทุกที่'
+      : 'ที่ประตูเมืองชวีฟู่ คุณส่งเธอออกเดินทาง โดยไม่รู้ว่าคืนต่อไปจะฝันถึงที่ไหน';
     $('endRows').innerHTML = Object.keys(CASES).map((k, i) => {
       const id = v.solved[k];
       const c = id ? CARDS[id] : null;
